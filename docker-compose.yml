@@ -12,4 +12,4 @@ services:
       - 3000:3000
     volume:
       - ./client:/app
-      - NODE_ENV=development
+      - /app/node_modules
