@@ -12,3 +12,15 @@ services:
       - 3000:3000
       - 9229:9229
     command: ["node", "--inspect=0.0.0.0:9229", "index.js"]
+  
+  server:
+    image: server
+    build:
+      context: server
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: development
+    ports:
+      -5000:5000
+      -9300:9300
+    command: ["node", "--inspect=0.0.0.0:9229", "index.js"]

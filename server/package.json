@@ -4,13 +4,19 @@
   "description": "",
   "license": "ISC",
   "author": "",
-  "type": "esmodule",
+  "type": "module",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon index.js",
+    "start": "index.js",
+    "run": "index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "express": "^4.21.2",
-    "mongoose": "^8.12.1"
-  }
+    "mongoose": "^8.12.1",
+    "nodemon": "^3.1.9"
+  },
+  "devDependencies": {},
+  "keywords": []
 }

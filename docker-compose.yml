@@ -1,5 +1,3 @@
-version: '3.4'
-
 services:
   client:
     image: client
@@ -10,6 +8,21 @@ services:
       NODE_ENV: production
     ports:
       - 3000:3000
-    volume:
-      - ./client:/app
+    command: npm run dev
+    volumes:
+      - ./client:/usr/src/app
+      - /usr/src/app/node_modules
+
+  server:
+    image: server
+    build:
+      context: server
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: production
+    ports: 
+      - 5000:5000
+    volumes:
+      - ./server:/app
       - /app/node_modules
+    command: npm run dev
