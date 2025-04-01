@@ -12,6 +12,15 @@ services:
     volumes:
       - ./client:/usr/src/app
       - /usr/src/app/node_modules
+    develop:
+      watch:
+        - action: sync
+          path: ./web
+          target: /src/web
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
 
   server:
     image: server
