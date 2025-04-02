@@ -11,7 +11,6 @@ const Navbar = () => {
                 <Image src="/img/Frame.png" alt="TravelManagementApp" width={40} height={40} />
             </Link>
 
-            {/* Dropdown Menu for Admin Avatar */}
             <DropdownMenu>
                 <DropdownMenuTrigger className='focus:outline-none'>
                     <Avatar>
