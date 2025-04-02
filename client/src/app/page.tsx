@@ -1,15 +1,13 @@
-import Image from 'next/image';
+import AdminDashboard from "@/components/admin_dashboard";
+import DriverDashboard from "@/components/driver_dashboard";
+import PropertyOwnerDashboard from "@/components/property_dashboard";
 
 export default function Home() {
   return (
-    <div className="header">
-      <Image 
-        src="/header_slideshow.png" // Ensure it's inside the 'public' folder
-        alt="Nature image"
-        width={800}
-        height={400}
-        priority // Ensures the image loads faster
-      />
-    </div>
+    <>
+      <AdminDashboard />
+      <DriverDashboard />
+      <PropertyOwnerDashboard />
+    </>
   );
 }
