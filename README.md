@@ -1,4 +1,4 @@
- upTo run the project run the following commands:
+To run the project, run the following commands:
 
 docker ps -a
 
