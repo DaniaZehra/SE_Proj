@@ -1,11 +1,22 @@
-import AdminDashboard from '@/components/admin_dashboard';
-import Image from 'next/image';
+
+import HeaderCarousel from "@/components/carousel";
+import TabBar from "@/components/tabbar";
+import BestDeals from "@/components/best_deals_carousel";
 
 export default function Home() {
   return (
-    <div className="header">
-      {/* <Image src="/header_slideshow.png" // Ensure it's inside the 'public' folder alt="Nature image" width={800} height={400} priority /> */}
-      <AdminDashboard/>
+    <div className="min-h-screen flex flex-col relative">
+      <section>
+        <div className="z-[9]">
+          <HeaderCarousel/>
+        </div>
+        <div className="w-full flex justify-center top-36 absolute z-[8]">
+          <TabBar/>
+        </div>
+      </section>
+      <section>
+        <BestDeals/>
+      </section>
     </div>
   );
 }
