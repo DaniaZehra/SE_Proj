@@ -8,9 +8,10 @@ services:
       NODE_ENV: production
     ports:
       - 3000:3000
+      - 8080:8080
     command: npm run dev
     volumes:
-      - ./client:/usr/src/app
+      - .:/se_proj
       - /usr/src/app/node_modules
     develop:
       watch:
@@ -31,7 +32,8 @@ services:
       NODE_ENV: production
     ports: 
       - 5000:5000
+      - 8000:8000
     volumes:
-      - ./server:/app
+      - .:/se_proj
       - /app/node_modules
     command: npm run dev
