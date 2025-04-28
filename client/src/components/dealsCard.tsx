@@ -1,6 +1,8 @@
 import Image from "next/image"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 
+
+
 interface DynamicCardProps {
   image: string
   title: string
@@ -10,6 +12,7 @@ interface DynamicCardProps {
   imageHeight?: number
 }
 
+
 export default function DynamicCard({
   image,
   title,
@@ -18,11 +21,19 @@ export default function DynamicCard({
   imageWidth = 800,
   imageHeight = 400,
 }: DynamicCardProps) {
+  console.log('Image source: ', image)
+
+  console.log('Image src:', image || '/placeholder.jpg');
+  const validatedImage = image?.startsWith('/') || image?.startsWith('http') 
+  ? image 
+  : '/placeholder.jpg';
+  console.log('validated image: ', validatedImage);
+  
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg">
       <div className="relative aspect-video w-full overflow-hidden">
         <Image
-          src={image ||'/placeholder.jpg'}
+          src={validatedImage}
           alt={imageAlt}
           width={imageWidth}
           height={imageHeight}

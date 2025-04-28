@@ -1,43 +1,41 @@
+'use client'
 import DynamicCard from './dealsCard';
 import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css'
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
-export default function BestDeals(){
-    return (
-        <div style={{height:'auto'}}>
-            <Carousel
-                aria-label='Slide-Show for the best deals to offer'
-                axis={'horizontal'}
-                autoPlay={true}
-                infiniteLoop={true}
-                showThumbs={true}
-                interval={10000}
-                centerMode={true}
-                centerSlidePercentage={25}
-            >
-        <div>
+export default function BestDeals() {
+  const deals = [
+    {
+      image: '/placeholder.jpg',
+      title: "Deal 1",
+      description: 'The best of the best',
+    },
+    {
+      image: '/placeholder.jpg',
+      title: "Deal 2",
+      description: 'Another great deal',
+    },
+  ];
+
+  return (
+    <div style={{ height: 'auto' }}>
+      <Carousel
+        infiniteLoop
+        centerMode
+        centerSlidePercentage={30}
+      >
+        {deals.map((deal, index) => (
+          <div key={index}>
             <DynamicCard
-                image="placeholder.jpg"
-                title="this is an image"
-                description='The best of the best'
-                imageWidth={400}
-                imageHeight={200}
-                imageAlt='placeholder image'
+              image={deal.image}
+              title={deal.title}
+              description={deal.description}
+              imageWidth={400}
+              imageHeight={200}
             />
-        </div>
-<div>
-    <DynamicCard
-        image="placeholder.jpg"
-        title="this is an image"
-        description='The best of the best'
-        imageWidth={400}
-        imageHeight={200}
-        imageAlt='placeholder image'
-    />
-</div>      
-</Carousel>
-
-</div>
-    )
-
+          </div>
+        ))}
+      </Carousel>
+    </div>
+  );
 }
