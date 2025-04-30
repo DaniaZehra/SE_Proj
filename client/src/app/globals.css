@@ -1,5 +1,10 @@
-@import "tailwindcss";
-@import "tw-animate-css"; 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Remove these imports - they're causing the conflict */
+/* @import "tailwindcss"; */
+/* @import "tw-animate-css"; */
 
 :root {
   --foreground: #0a0a0a;

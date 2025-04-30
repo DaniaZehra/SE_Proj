@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
   // Alternative method (works alongside webpack config)
   experimental: {
     webpackBuildWorker: true,
+    optimizePackageImports: ["tailwindcss"],
   },
 };
 

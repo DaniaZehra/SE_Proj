@@ -1,9 +1,13 @@
-import type { Metadata } from "next";
+'use client'
+//import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Link from 'next/link';
 import "./globals.css";
-import Sidebar from "@/components/sidebar"; 
+import { AppSidebar } from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
+import { SidebarProvider, SidebarInset} from "@/components/ui/sidebar";
+import SidebarWithTrigger from "@/components/SidebarWithTrigger";
+import { User, LogOut, Settings } from 'lucide-react';
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,10 +19,35 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Travel Management App",
-  description: "Seamless Travel, Unforgettable Experiences!",
+// export const metadata: Metadata = {
+//   title: "Travel Management App",
+//   description: "Seamless Travel, Unforgettable Experiences!",
+// };
+
+const currentUser = {
+  name: "Jane Doe",
+  avatar: "/custom-avatar.jpg",
+  initials: "JD"
 };
+
+const accountItems = [
+  { 
+    label: "Profile", 
+    href: '/profile',
+    icon: <User className="w-4 h-4" />
+  },
+  { 
+    label: "Settings", 
+    href: '/settings',
+    icon: <Settings className="w-4 h-4" />
+  },
+  { 
+    label: "Logout", 
+    onClick: () => console.log("Logging out..."),
+    icon: <LogOut className="w-4 h-4" />
+  }
+];
+
 
 export default function RootLayout({
   children,
@@ -27,17 +56,31 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Navbar/>
-        <div className="flex">
-          <div className="hidden md:block h-{100vh">
-            <Sidebar/>
-          </div>
-          <div className="p-5 w-full md:max-w-[1140px]">
-            {children}
-          </div>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <Navbar  avatar={{
+          src: currentUser.avatar,
+          fallbackText: currentUser.initials,
+          alt: `${currentUser.name}'s profile picture`
+        }}
+        accountItems={accountItems}
+        theme={{
+          background: "bg-indigo-600 dark:bg-indigo-900",
+          text: "text-white"
+        }}
+      >
+        <div className="text-sm text-white mr-4">
+          Welcome, {currentUser.name}
         </div>
+      </Navbar>
+        <div className="flex">
+          <SidebarProvider>
+          <AppSidebar />
+          <SidebarWithTrigger/>
+            <SidebarInset>
+            {children}
+            </SidebarInset>
+          </SidebarProvider>
+          </div>
       </body>
     </html>
   );

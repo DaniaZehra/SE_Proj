@@ -4,7 +4,7 @@ import  Form  from 'next/form';
 
 export default function TabBar() {
   return (
-    <div className="w-full flex flex-col items-center p-4 gap-4"> 
+    <div className="w-full justify-center flex"> 
       <Tabs defaultValue="hotels" className="w-full max-w-2xl"> 
         <div className="flex justify-center"> 
           <TabsList className="h-12 gap-1">
