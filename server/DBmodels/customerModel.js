@@ -2,7 +2,11 @@ import mongoose from 'mongoose'
 const Schema = mongoose.Schema;
 
 const customerSchema = new Schema({
-    name: {
+    firstname: {
+        type: String,
+        required: true
+    },
+    lastname: {
         type: String,
         required: true
     },
@@ -16,9 +20,6 @@ const customerSchema = new Schema({
         required: true
     },
     phone: {
-        type: String
-    },
-    address: {
         type: String
     }
 }, { timestamps: true });
