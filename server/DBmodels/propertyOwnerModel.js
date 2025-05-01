@@ -2,7 +2,11 @@ import mongoose from 'mongoose'
 const Schema = mongoose.Schema;
 
 const ownerSchema = new Schema({
-    name: {
+    firstname: {
+        type: String,
+        required: true
+    },
+    lastname: {
         type: String,
         required: true
     },
