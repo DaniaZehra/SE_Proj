@@ -1,17 +1,13 @@
-FROM node:lts-alpine
-
-# We use nodemon to restart the server every time there's a change
-RUN npm install -g nodemon
+FROM node:16
 
 WORKDIR /app
 
-COPY package.json .
+COPY package*.json ./
 
 RUN npm install
 
 COPY . .
 
-EXPOSE 5000
+EXPOSE 4000
 
-# Use script specified in package,json
 CMD ["npm", "run", "dev"]
