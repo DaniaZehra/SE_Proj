@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
 import express from 'express'
 import mongoose from 'mongoose'
-import adminRoutes from './routes/adminRoutes.js';
+import adminRoutes from './routes/adminRoutes.js'
+import cookieParser from 'cookie-parser';
 const app = express();
 dotenv.config();
 const PORT = process.env.PORT;
@@ -9,7 +10,7 @@ const PORT = process.env.PORT;
 app.get('/', (req, res) => {
   res.send('Hello from the backend!');
 });
-
+app.use(cookieParser())
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>{
     app.listen(process.env.PORT,()=>{
