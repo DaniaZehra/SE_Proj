@@ -39,7 +39,7 @@ export function Navbar({ landingPage = false }: NavbarProps) {
   const [selectedLanguage, setSelectedLanguage] = React.useState(languages[0])
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background">
+    <header className="sticky top-0 z-50 w-full border-b bg-primary/90">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2 md:gap-4">
         <Link href="/" className="flex items-center space-x-2">
@@ -56,7 +56,7 @@ export function Navbar({ landingPage = false }: NavbarProps) {
                 <ChevronDown className="h-4 w-4 opacity-50" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="bg-slate-300">
               <DropdownMenuLabel>Select Language</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {languages.map((language) => (
