@@ -26,14 +26,13 @@ services:
   server:
     image: server
     build:
-      context: server
-      dockerfile: ./Dockerfile
-    environment:
-      NODE_ENV: production
-    ports: 
-      - 5000:5000
-      - 8000:8000
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
     volumes:
-      - .:/se_proj
+      - ./server:/app
       - /app/node_modules
     command: npm run dev
+    environment:
+      NODE_ENV: development
