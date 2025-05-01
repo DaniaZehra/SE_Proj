@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import adminRoutes from './routes/adminRoutes.js'
 import customerRoutes from './routes/customerRoutes.js'
 import ownerRoutes from './routes/ownerRoutes.js'
+import driverRoutes from './routes/driverRoutes.js'
 import cookieParser from 'cookie-parser';
 const app = express();
 dotenv.config();
@@ -26,3 +27,4 @@ app.use(express.json());
 app.use('/api/customer',customerRoutes)
 app.use('/api/admin',adminRoutes)
 app.use('/api/owner',ownerRoutes)
+app.use('/api/driver',driverRoutes)
