@@ -4,25 +4,37 @@ import  Form  from 'next/form';
 
 export default function TabBar() {
   return (
-    <div className="w-full justify-center flex"> 
+    <div className="justify-center w-full flex p-8"> 
       <Tabs defaultValue="hotels" className="w-full max-w-2xl"> 
         <div className="flex justify-center"> 
-          <TabsList className="h-12 gap-1">
+          <TabsList className="h-12 gap-1 border-separate">
             <TabsTrigger 
               value="hotels" 
-              className="px-6 py-2 text-base font-medium" 
+              className="px-6 py-2 text-base font-medium border-2px-solid
+              data-[state=active]:bg-primary 
+              data-[state=active]:text-primary-foreground
+              hover:bg-primary/90
+              transition-colors" 
             >
               Hotels
             </TabsTrigger>
             <TabsTrigger 
               value="drivers"
-              className="px-6 py-2 text-base font-medium"
+              className="px-6 py-2 text-base font-medium border-2px-solid
+              data-[state=active]:bg-primary 
+              data-[state=active]:text-primary-foreground
+              hover:bg-primary/90
+              transition-colors"
             >
               Drivers
             </TabsTrigger>
             <TabsTrigger 
               value="flights"
-              className="px-6 py-2 text-base font-medium"
+              className="px-6 py-2 text-base font-medium border-2px-solid
+              data-[state=active]:bg-primary 
+              data-[state=active]:text-primary-foreground
+              hover:bg-primary-40
+              transition-colors"
             >
               Flights
             </TabsTrigger>

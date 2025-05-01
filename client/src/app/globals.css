@@ -2,18 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Remove these imports - they're causing the conflict */
-/* @import "tailwindcss"; */
-/* @import "tw-animate-css"; */
+@layer components {
+  .TabsTrigger {
+    @apply transition-colors hover:bg-primary hover:text-white;
+  }
+  .TabsTrigger[data-state="active"] {
+    @apply bg-primary text-white;
+  }
+}
 
 :root {
   --foreground: #0a0a0a;
   --background: #ededed;
+  --primary: #3b82f6; /* Example primary color - adjust to match your theme */
+  --primary-hover: #2563eb; /* Darker shade for hover */
 }
 
 .dark {
   --foreground: #ededed;
   --background: #0a0a0a;
+  --primary: #1d4ed8; /* Dark mode primary */
+  --primary-hover: #1e40af; /* Dark mode hover */
 }
 
 body {

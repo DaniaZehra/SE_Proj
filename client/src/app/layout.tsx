@@ -2,11 +2,10 @@
 //import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { AppSidebar } from "@/components/Sidebar";
-import Navbar from "@/components/Navbar";
-import { SidebarProvider, SidebarInset} from "@/components/ui/sidebar";
-import SidebarWithTrigger from "@/components/SidebarWithTrigger";
-import { User, LogOut, Settings } from 'lucide-react';
+import LayoutWithSidebar from "@/components/LayoutWithSidebar";
+import { usePathname } from "next/navigation";
+import {Navbar} from "@/components/Navbar";
+
 
 
 const geistSans = Geist({
@@ -24,29 +23,6 @@ const geistMono = Geist_Mono({
 //   description: "Seamless Travel, Unforgettable Experiences!",
 // };
 
-const currentUser = {
-  name: "Jane Doe",
-  avatar: "/custom-avatar.jpg",
-  initials: "JD"
-};
-
-const accountItems = [
-  { 
-    label: "Profile", 
-    href: '/profile',
-    icon: <User className="w-4 h-4" />
-  },
-  { 
-    label: "Settings", 
-    href: '/settings',
-    icon: <Settings className="w-4 h-4" />
-  },
-  { 
-    label: "Logout", 
-    onClick: () => console.log("Logging out..."),
-    icon: <LogOut className="w-4 h-4" />
-  }
-];
 
 
 export default function RootLayout({
@@ -57,31 +33,38 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-      <Navbar  avatar={{
-          src: currentUser.avatar,
-          fallbackText: currentUser.initials,
-          alt: `${currentUser.name}'s profile picture`
-        }}
-        accountItems={accountItems}
-        theme={{
-          background: "bg-indigo-600 dark:bg-indigo-900",
-          text: "text-white"
-        }}
-      >
-        <div className="text-sm text-white mr-4">
-          Welcome, {currentUser.name}
-        </div>
-      </Navbar>
         <div className="flex">
-          <SidebarProvider>
-          <AppSidebar />
-          <SidebarWithTrigger/>
-            <SidebarInset>
-            {children}
-            </SidebarInset>
-          </SidebarProvider>
+          <AppContent>{children}</AppContent>
           </div>
       </body>
     </html>
   );
+}
+
+function AppContent({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname()
+  
+  const noSidebarPaths = ["/login", "/"]
+  const noNavbarPaths = ["/login"]
+  
+  if (noSidebarPaths.includes(pathname)) {
+    if(noNavbarPaths.includes(pathname)){
+      return <div>{children}</div>
+    }
+    else{
+      return (
+      <div>
+        <Navbar landingPage={true}/>
+        <div>{children}</div>
+      </div>
+    )
+    }
+  }
+  
+  return (
+    <div className="flex-1">
+      <Navbar/>
+      <LayoutWithSidebar>{children}</LayoutWithSidebar>
+    </div>
+  )
 }
