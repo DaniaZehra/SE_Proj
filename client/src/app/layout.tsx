@@ -40,31 +40,30 @@ export default function RootLayout({
 }
 
 function AppContent({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
-  
-  const noSidebarPaths = ["/login", "/"]
-  const noNavbarPaths = ["/login"]
-  
+  const pathname = usePathname() ?? "";
+
+  const noSidebarPaths = ["/login", "/"];
+  const noNavbarPaths = ["/login"];
+
   if (noSidebarPaths.includes(pathname)) {
-    if(noNavbarPaths.includes(pathname)){
-      return <div>{children}</div>
-    }
-    else{
+    if (noNavbarPaths.includes(pathname)) {
+      return <div>{children}</div>;
+    } else {
       return (
-      <div>
-        <Navbar landingPage={true}/>
-        <div>{children}</div>
-      </div>
-    )
+        <div>
+          <Navbar landingPage={true} />
+          <div>{children}</div>
+        </div>
+      );
     }
   }
-  
+
   return (
     <div className="flex-1">
-      <Navbar/>
+      <Navbar />
       <div className="ml-4">
-      <LayoutWithSidebar>{children}</LayoutWithSidebar>
+        <LayoutWithSidebar>{children}</LayoutWithSidebar>
       </div>
     </div>
-  )
+  );
 }

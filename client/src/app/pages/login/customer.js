@@ -2,20 +2,20 @@
 import LoginForm from "@/components/loginForm"; 
 import { useRouter } from "next/router";
 
-export default function OwnerLoginPage() {
+export default function CustomerLoginPage() {
   const router = useRouter();
 
   const navigateToRegister = () => {
-    router.push("/register/owner");
+    router.push("/register/customer");
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-muted/50 p-6 rounded-md w-full max-w-sm shadow-md space-y-4 mx-auto mt-10">
-        <h2 className="text-xl font-semibold text-center">Login as Owner</h2>
+        <h2 className="text-xl font-semibold text-center">Login as Customer</h2>
         
         {}
-        <LoginForm role="owner" />
+        <LoginForm role="customer" />
 
         {}
         <div className="text-center mt-4">
