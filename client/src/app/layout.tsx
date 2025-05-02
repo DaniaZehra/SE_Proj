@@ -32,7 +32,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <div className="flex">
+<<<<<<< Updated upstream
           <AppContent>{children}</AppContent>
+=======
+          <div className="hidden md:block h-[100vh]"> <Sidebar/>
+>>>>>>> Stashed changes
           </div>
       </body>
     </html>

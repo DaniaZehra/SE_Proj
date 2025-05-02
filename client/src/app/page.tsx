@@ -1,7 +1,12 @@
+<<<<<<< Updated upstream
 
 import HeaderCarousel from "@/components/carousel";
 import TabBar from "@/components/tabbar";
 import BestDeals from "@/components/best_deals_carousel";
+=======
+import AdminDashboard from '@/components/admin_dashboard';
+// import Image from 'next/image';
+>>>>>>> Stashed changes
 
 export default function Home() {
   return (
