@@ -77,7 +77,7 @@ export function AppSidebar({ navigationItems = defaultNavigationItems}: AppSideb
         <SidebarGroup>
           {/* <SidebarGroupLabel>Application</SidebarGroupLabel> */}
           <SidebarGroupContent>
-          <Separator className="my-4 ml-1 top-4 left-2 p-2 flex items-center "/>
+          <Separator className="mt-12 ml-1 top-4 left-2 p-2 flex items-center "/>
             <SidebarMenu>
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.title}>

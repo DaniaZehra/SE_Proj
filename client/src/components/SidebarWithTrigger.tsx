@@ -1,7 +1,6 @@
 'use client';
 
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/Sidebar";
 import { cn } from "@/lib/utils";
 
 export default function SidebarWithTrigger() {
@@ -17,8 +16,6 @@ export default function SidebarWithTrigger() {
         )}
       >
       </SidebarTrigger>
-
-      <AppSidebar />
     </div>
   );
 }

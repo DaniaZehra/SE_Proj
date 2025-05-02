@@ -1,10 +1,10 @@
 'use client'
 //import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Link from 'next/link';
+import { usePathname } from "next/navigation";
 import "./globals.css";
-import Sidebar from "@/components/sidebar"; 
-import Navbar from "@/components/Navbar";
+import LayoutWithSidebar from "@/components/LayoutWithSidebar";
+import {Navbar} from "@/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -62,7 +62,9 @@ function AppContent({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex-1">
       <Navbar/>
+      <div className="ml-4">
       <LayoutWithSidebar>{children}</LayoutWithSidebar>
+      </div>
     </div>
   )
 }
