@@ -1,5 +1,5 @@
 import Owner from '../DBmodels/propertyOwnerModel.js';
-import Property from '../DBmodels/propertyModel.js'; 
+import {Property} from '../DBmodels/ServicesOfferedModel.js'; 
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 const registerOwner = async (req, res) => {

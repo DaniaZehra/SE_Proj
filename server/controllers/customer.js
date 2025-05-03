@@ -1,4 +1,6 @@
 import Customer from '../DBmodels/customerModel.js';
+import { propertyBooking } from '../DBmodels/bookingModel.js';
+import { Property } from '../DBmodels/ServicesOfferedModel.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -79,5 +81,39 @@ const loginCustomer = async (req, res) => {
 };
 
 //Booking
+const booking = async(req, res)=>{
+    type = req.params
+    if(type == 'property'){
+        const {userId, propertyId, roomType, guests, checkIn, checkOut, price, status} = req.body
+        try{
+            const booking = await propertyBooking.create({userId, propertyId, roomType, guests, checkIn, checkOut, price})
+            res.status(200).json({
+                propertyId: booking.propertyId,
+                roomType: booking.roomType,
+                guests: booking.guests,
+                checkIn: booking.checkIn,
+                checkOut: booking.checkOut
+            })
+        }catch(err){
+            res.status(400).json({error: err.message})
+        }
+    }
+    if(type == 'activity'){
+        
+    }
+}
 
-export { registerCustomer, loginCustomer };
+const search = async(req, res) =>{
+    const filter = req.query.filter;
+    try{
+        console.log(filter)
+        const result = await Property.find({propertyType:filter})
+        res.status(200).json({result: [result]})
+        console.log(result)
+    }
+    catch(err){
+        res.status(400).json({error: err.message})
+    }
+}
+
+export { registerCustomer, loginCustomer, booking, search };

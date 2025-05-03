@@ -9,8 +9,8 @@ const propertySchema = new Schema(
     location: {
       city: String,
       country: String,
-      coordinates: { lat: Number, lng: Number }
     },
+    propertyType:{type:String, enum:['Hotel'|'Rest House'|'Apartment'|'Hostel'|'Room'|'Home']},
     pricePerNight: Number,
     amenities: [String],
     availability: [
@@ -29,8 +29,8 @@ const propertySchema = new Schema(
     updatedAt: Date
   }
 )
-
 const Property = mongoose.model('Property', propertySchema)
-export default Property
+
+export {Property}
 
 

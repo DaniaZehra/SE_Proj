@@ -14,7 +14,7 @@ const propertyBookingsSchema = new Schema({
     createdAt: Date,
     updatedAt: Date
 })
-  
+
 
 const propertyBooking = model('propertyBooking',propertyBookingsSchema)
 export {propertyBooking}
