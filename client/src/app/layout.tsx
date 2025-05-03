@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import "./globals.css";
 import LayoutWithSidebar from "@/components/LayoutWithSidebar";
 import { Navbar } from "@/components/Navbar";
-import { Sidebar } from "@/components/ui/sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,26 +36,33 @@ function AppContent({ children }: { children: React.ReactNode }) {
   const noSidebarPaths = ["/login", "/"];
   const noNavbarPaths = ["/login"];
 
-  const showSidebar = !noSidebarPaths.includes(pathname);
-  const showNavbar = !noNavbarPaths.includes(pathname);
+  const showSidebar = !(noSidebarPaths.includes(pathname)||pathname.includes('login')||pathname.includes('register'));
+  const showNavbar = !(noNavbarPaths.includes(pathname)||pathname.includes('login')||pathname.includes('register'))
 
-  return (
-    <div className="flex">
-      {showSidebar && (
-        <div className="hidden md:block h-screen">
-          <Sidebar/>
-        </div>
-      )}
-      <div className="flex-1">
-        {showNavbar && <Navbar landingPage={!showSidebar} />}
-        <div className={showSidebar ? "ml-4" : ""}>
-          {showSidebar ? (
+  if(showNavbar){
+    if(showSidebar){
+      return(
+        <div>
+          <Navbar/>
+          <div className="flex">
             <LayoutWithSidebar>{children}</LayoutWithSidebar>
-          ) : (
-            children
-          )}
+          </div>
         </div>
+      )
+    }
+    else{
+      return(
+        <div>
+          <Navbar landingPage={true}/>
+        </div>
+      )
+    }
+  }
+  else{
+    return(
+      <div>
+        {children}
       </div>
-    </div>
-  );
+    )
+  }
 }
