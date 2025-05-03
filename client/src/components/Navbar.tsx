@@ -1,10 +1,8 @@
 "use client"
-
 import * as React from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Bell, Check, ChevronDown, Globe, HelpCircle, LifeBuoy, LogOut, Menu, Settings, User, X } from "lucide-react"
-
 import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -27,6 +25,7 @@ interface NavbarProps {
 export function Navbar({ landingPage = false }: NavbarProps) {
   const [isOpen, setIsOpen] = React.useState(false)
   const pathname = usePathname()
+  const router = useRouter()
 
   const languages = [
     { name: "English", code: "en" },
@@ -37,17 +36,35 @@ export function Navbar({ landingPage = false }: NavbarProps) {
   ]
 
   const [selectedLanguage, setSelectedLanguage] = React.useState(languages[0])
+  
+  // Comprehensive list of all auth paths
+  const authPaths = [
+    '/login/customer',
+    '/login/owner',
+    '/login/admin',
+    '/login/driver',
+    '/register/admin',
+    '/register/customer',
+    '/register/owner',
+    '/register/driver'
+  ]
+  const isAuthPage = authPaths.some(path => pathname?.startsWith(path))
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-primary/90">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2 md:gap-4">
-        <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2">
             <span className="text-xl font-bold ml-2">WayFare</span>
           </Link>
         </div>
         <div className="flex items-center gap-2">
-          {/* Language Selector */}
+          {/* Always show Support and Language */}
+          <Button variant="ghost" size="sm" className="gap-1">
+            <HelpCircle className="h-4 w-4" />
+            <span className="hidden sm:inline-block">Support</span>
+          </Button>
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="gap-1">
@@ -56,7 +73,7 @@ export function Navbar({ landingPage = false }: NavbarProps) {
                 <ChevronDown className="h-4 w-4 opacity-50" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-slate-300">
+            <DropdownMenuContent align="end" className="w-40 bg-slate-50">
               <DropdownMenuLabel>Select Language</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {languages.map((language) => (
@@ -72,18 +89,56 @@ export function Navbar({ landingPage = false }: NavbarProps) {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Support Button */}
-          <Button variant="ghost" size="sm" className="gap-1">
-            <HelpCircle className="h-4 w-4" />
-            <span className="hidden sm:inline-block">Support</span>
-          </Button>
+          {/* Only show Login/Register dropdown when NOT on auth pages */}
+          {!isAuthPage && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="gap-1">
+                  <User className="h-4 w-4" />
+                  <span className="hidden sm:inline-block">Login/Register</span>
+                  <ChevronDown className="h-4 w-4 opacity-50" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 bg-slate-50">
+                <DropdownMenuLabel>Login As</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => router.push('/login/customer')}>
+                  Customer
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push('/login/driver')}>
+                  Driver
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push('/login/owner')}>
+                  Property Owner
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push('/login/admin')}>
+                  Admin
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel>Register As</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => router.push('/register/customer')}>
+                  Customer
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push('/register/driver')}>
+                  Driver
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push('/register/owner')}>
+                  Property Owner
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push('/register/admin')}>
+                  Admin
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
 
-          {!landingPage && (
+          {/* Only show notifications and profile when NOT on landing page AND NOT on auth pages */}
+          {!landingPage && !isAuthPage && (
             <>
-              {/* Notifications */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative bg-slate-50">
+                  <Button variant="ghost" size="icon" className="relative">
                     <Bell className="h-5 w-5" />
                     <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center">
                       3
@@ -123,7 +178,6 @@ export function Navbar({ landingPage = false }: NavbarProps) {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* User Profile */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full">
@@ -133,7 +187,7 @@ export function Navbar({ landingPage = false }: NavbarProps) {
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="bg-slate-50">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
@@ -160,26 +214,26 @@ export function Navbar({ landingPage = false }: NavbarProps) {
             </>
           )}
 
-          {/* Mobile Menu */}
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right">
-              <div className="flex flex-col gap-6 py-6">
-                <div className="flex items-center justify-between">
-                  <Link href="/" className="flex items-center space-x-2">
-                    <span className="text-xl font-bold">Brand</span>
-                  </Link>
-                  <SheetClose asChild>
-                    <Button variant="ghost" size="icon">
-                      <X className="h-5 w-5" />
-                    </Button>
-                  </SheetClose>
-                </div>
-                {!landingPage && (
+          {/* Mobile Menu - Only show when NOT on auth pages AND NOT on landing page */}
+          {!isAuthPage && !landingPage && (
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="bg-slate-50">
+                <div className="flex flex-col gap-6 py-6">
+                  <div className="flex items-center justify-between">
+                    <Link href="/" className="flex items-center space-x-2">
+                      <span className="text-xl font-bold">WayFare</span>
+                    </Link>
+                    <SheetClose asChild>
+                      <Button variant="ghost" size="icon">
+                        <X className="h-5 w-5" />
+                      </Button>
+                    </SheetClose>
+                  </div>
                   <nav className="flex flex-col gap-4">
                     <Link
                       href="/dashboard"
@@ -212,10 +266,10 @@ export function Navbar({ landingPage = false }: NavbarProps) {
                       Analytics
                     </Link>
                   </nav>
-                )}
-              </div>
-            </SheetContent>
-          </Sheet>
+                </div>
+              </SheetContent>
+            </Sheet>
+          )}
         </div>
       </div>
     </header>

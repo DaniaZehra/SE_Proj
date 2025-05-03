@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-dotenv.config()
+dotenv.config();
+
 const requireAuth = (req, res, next) => {
     const token = req.cookies.token;
 
@@ -10,11 +11,13 @@ const requireAuth = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.adminId = decoded.id;
+        req.userId = decoded.id;
+        
         next();
     } catch (err) {
         return res.status(401).json({ error: 'Invalid token' });
     }
 };
+
 
 export default requireAuth;
