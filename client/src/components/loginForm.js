@@ -1,35 +1,58 @@
-"use client"
-import { useState } from "react"
-import { useRouter } from "next/router"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation"; 
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function LoginForm({ role }) {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(""); 
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError("")
+    e.preventDefault();
+    setError("");
+    setSuccessMessage(""); 
+    setIsLoading(true);
 
     try {
-      const res = await fetch(`http://localhost:4000/api/${role}/login`, {
+      if (!email || !password) {
+        throw new Error("Please provide both email and password");
+      }
+      const response = await fetch(`http://localhost:4000/api/${role}/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        headers: { 
+          "Content-Type": "application/json",
+        },
+        credentials: "include", 
         body: JSON.stringify({ email, password }),
-      })
+      });
 
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || "Login failed")
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.error || 
+          errorData.message || 
+          `Login failed with status ${response.status}`
+        );
+      }
 
-      router.push(`/${role}/dashboard`)
+      const data = await response.json();
+      setSuccessMessage("Login successful!"); // Set success message
+      setTimeout(() => {
+        router.push(`/${role}/dashboard`);
+      }, 1500); // Redirect after showing message
+      
     } catch (err) {
-      setError(err.message)
+      console.error("Login error:", err);
+      setError(err.message || "Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <form
@@ -37,7 +60,18 @@ export default function LoginForm({ role }) {
       className="bg-muted/50 p-6 rounded-md w-full max-w-sm shadow-md space-y-4 mx-auto mt-10"
     >
       <h2 className="text-xl font-semibold text-center">Login as {role}</h2>
-      {error && <p className="text-red-600 text-sm">{error}</p>}
+      
+      {error && (
+        <div className="p-2 bg-red-50 text-red-600 rounded text-sm">
+          {error}
+        </div>
+      )}
+
+      {successMessage && (
+        <div className="p-2 bg-green-50 text-green-600 rounded text-sm">
+          {successMessage}
+        </div>
+      )}
 
       <Input
         type="email"
@@ -45,6 +79,7 @@ export default function LoginForm({ role }) {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
+        className="w-full"
       />
 
       <Input
@@ -53,11 +88,16 @@ export default function LoginForm({ role }) {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
+        className="w-full"
       />
 
-      <Button type="submit" className="w-full">
-        Login
+      <Button 
+        type="submit" 
+        className="w-full"
+        disabled={isLoading}
+      >
+        {isLoading ? "Logging in..." : "Login"}
       </Button>
     </form>
-  )
+  );
 }

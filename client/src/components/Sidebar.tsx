@@ -1,4 +1,5 @@
 import type { ReactNode } from "react"
+import { usePathname } from "next/navigation"
 import {
   BarChart3,
   Calendar,
@@ -61,7 +62,6 @@ const defaultNavigationItems: NavigationItem[] = [
     icon: Calendar,
     url: "/calendar",
   },
-
   {
     title: "Settings",
     icon: Settings,
@@ -69,8 +69,25 @@ const defaultNavigationItems: NavigationItem[] = [
   },
 ]
 
+export function AppSidebar({ navigationItems = defaultNavigationItems }: AppSidebarProps) {
+  const pathname = usePathname()
 
-export function AppSidebar({ navigationItems = defaultNavigationItems}: AppSidebarProps) {
+  //for hiding sidebar on login/registet pages
+  const authPaths = [
+    '/login/customer',
+    '/login/owner',
+    '/login/admin',
+    '/login/driver',
+    '/register/admin',
+    '/register/customer',
+    '/register/owner',
+    '/register/driver'
+  ]
+
+  if (authPaths.some(path => pathname?.startsWith(path))) {
+    return null
+  }
+
   return (
     <Sidebar>
       <SidebarContent>
