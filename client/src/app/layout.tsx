@@ -32,7 +32,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <div className="flex">
+          <div className="flex-1">
           <AppContent>{children}</AppContent>
+          </div>
           </div>
       </body>
     </html>
@@ -42,10 +44,10 @@ export default function RootLayout({
 function AppContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? "";
 
-  const noSidebarPaths = ["/login", "/"];
+  const noSidebarPaths = ["/"];
   const noNavbarPaths = ["/login"];
 
-  if (noSidebarPaths.includes(pathname)) {
+  if (noSidebarPaths.includes(pathname) || pathname.startsWith("/login")) {
     if (noNavbarPaths.includes(pathname)) {
       return <div>{children}</div>;
     } else {
