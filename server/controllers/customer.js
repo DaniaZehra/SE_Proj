@@ -78,4 +78,6 @@ const loginCustomer = async (req, res) => {
     }
 };
 
+//Booking
+
 export { registerCustomer, loginCustomer };

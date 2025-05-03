@@ -1,4 +1,5 @@
-import Owner from '../DBmodels/propertyOwnerModel.js'; 
+import Owner from '../DBmodels/propertyOwnerModel.js';
+import Property from '../DBmodels/propertyModel.js'; 
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 const registerOwner = async (req, res) => {
@@ -83,4 +84,21 @@ const loginOwner = async (req, res) => {
     }
 };
 
-export { registerOwner, loginOwner };
+//Add Property Listing
+
+const CreateProperty = async(req, res) => {
+    const {ownerId, name, description, location, pricePerNight} = req.body;
+    try{
+        const property = await Property.create({ownerId, name, description, location, pricePerNight})
+        res.status(200).json({
+            name: property.name,
+            description: property.description,
+            location: property.location,
+            pricePerNight: property.pricePerNight
+        });  
+    }catch(err){
+        res.status(400).json({error:err.message})
+    }
+}
+
+export { registerOwner, loginOwner, CreateProperty };

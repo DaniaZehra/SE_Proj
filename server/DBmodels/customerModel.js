@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-const Schema = mongoose.Schema;
+const {Schema, model, Types} = mongoose;
 
 const customerSchema = new Schema({
     firstname: {
@@ -21,7 +21,23 @@ const customerSchema = new Schema({
     },
     phone: {
         type: String
-    }
+    },
+    propertyBookings: [
+    { bookingId: Types.ObjectId, propertyName: String, forDate: Date, status: String }
+    ],
+
+    flightBookings: [
+    { bookingId: Types.ObjectId, flightNumber: String, forDate: Date, status: String }
+    ],
+
+    activityBookings: [
+    { bookingId: Types.ObjectId, activityName: String, forDate: Date, status: String }
+    ],
+
+    dealBookings: [
+    { bookingId: Types.ObjectId, dealName: String, forDate: Date, status: String }
+    ],
 }, { timestamps: true });
-const Customer = mongoose.model('Customer', customerSchema);
-export default Customer;
+
+const Customer = model('Customer', customerSchema);
+export default Customer
