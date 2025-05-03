@@ -1,10 +1,11 @@
-'use client'
-//import type { Metadata } from "next";
+'use client';
+
 import { Geist, Geist_Mono } from "next/font/google";
 import { usePathname } from "next/navigation";
 import "./globals.css";
 import LayoutWithSidebar from "@/components/LayoutWithSidebar";
-import {Navbar} from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
+import { Sidebar } from "@/components/ui/sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,13 +17,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// export const metadata: Metadata = {
-//   title: "Travel Management App",
-//   description: "Seamless Travel, Unforgettable Experiences!",
-// };
-
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,40 +25,38 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <div className="flex">
-          <AppContent>{children}</AppContent>
-          </div>
+        <AppContent>{children}</AppContent>
       </body>
     </html>
   );
 }
 
 function AppContent({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
-  
-  const noSidebarPaths = ["/login", "/"]
-  const noNavbarPaths = ["/login"]
-  
-  if (noSidebarPaths.includes(pathname)) {
-    if(noNavbarPaths.includes(pathname)){
-      return <div>{children}</div>
-    }
-    else{
-      return (
-      <div>
-        <Navbar landingPage={true}/>
-        <div>{children}</div>
-      </div>
-    )
-    }
-  }
-  
+  const pathname = usePathname();
+
+  const noSidebarPaths = ["/login", "/"];
+  const noNavbarPaths = ["/login"];
+
+  const showSidebar = !noSidebarPaths.includes(pathname);
+  const showNavbar = !noNavbarPaths.includes(pathname);
+
   return (
-    <div className="flex-1">
-      <Navbar/>
-      <div className="ml-4">
-      <LayoutWithSidebar>{children}</LayoutWithSidebar>
+    <div className="flex">
+      {showSidebar && (
+        <div className="hidden md:block h-screen">
+          <Sidebar/>
+        </div>
+      )}
+      <div className="flex-1">
+        {showNavbar && <Navbar landingPage={!showSidebar} />}
+        <div className={showSidebar ? "ml-4" : ""}>
+          {showSidebar ? (
+            <LayoutWithSidebar>{children}</LayoutWithSidebar>
+          ) : (
+            children
+          )}
+        </div>
       </div>
     </div>
-  )
+  );
 }

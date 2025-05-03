@@ -1,7 +1,6 @@
-
-import HeaderCarousel from "@/components/carousel";
 import TabBar from "@/components/tabbar";
 import BestDeals from "@/components/best_deals_carousel";
+import HeaderCarousel from "@/components/ui/carousel";
 
 export default function Home() {
   return (
