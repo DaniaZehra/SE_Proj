@@ -12,7 +12,7 @@ export default function SidebarWithTrigger() {
       <SidebarTrigger
         className={cn(
           "transition-transform duration-300 absolute top-4 left-2 z-50 flex items-center justify-center p-2 bg-white shadow rounded-full",
-          open? "translate-x-[110px]" : "translate-x-0"
+          open? "translate-x-[20px]" : "translate-x-0"
         )}
       >
       </SidebarTrigger>

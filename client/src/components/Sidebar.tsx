@@ -1,36 +1,36 @@
 import {
-    Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput,
-    CommandItem, CommandList, CommandSeparator, CommandShortcut,
+    Command, CommandEmpty, CommandGroup, CommandInput,
+    CommandItem, CommandList, CommandSeparator
 } from "@/components/ui/command"
 import Link from "next/link";
-import { LayoutDashboard, Hotel, Car, Plane, Activity, Package, User, PieChart, MessageCircle } from 'lucide-react'
+import { LayoutDashboard, Hotel, Car, Plane, Package,BarChart2, User,Briefcase, CalendarCheck,Users, Activity, MessagesSquare,Headset } from 'lucide-react'
 
 const Sidebar = () => {
     return (
         <div>
             <Command>
-                <CommandInput placeholder="Type a command or search..." />
+                <CommandInput placeholder="Search" />
                 <CommandList>
-                    <CommandEmpty>No results found.</CommandEmpty>
+                    <CommandEmpty>No results found</CommandEmpty>
                     <CommandGroup heading="Bookings Management">
                         <CommandItem>
                             <Link href="/bookings/hotels">
-                                <Hotel className="mr-2" /> Hotels
+                                <Hotel className="mr-2" />Hotels
                             </Link>
                         </CommandItem>
                         <CommandItem>
                             <Link href="/bookings/rides">
-                                <Car className="mr-2" /> Rides
+                                <Car className="mr-2" />Rides
                             </Link>
                         </CommandItem>
                         <CommandItem>
                             <Link href="/bookings/flights">
-                                <Plane className="mr-2" /> Flights
+                                <Plane className="mr-2" />Flights
                             </Link>
                         </CommandItem>
                         <CommandItem>
                             <Link href="/bookings/activities">
-                                <Activity className="mr-2" /> Activities
+                                <Activity className="mr-2" />Activities
                             </Link>
                         </CommandItem>
                     </CommandGroup>
@@ -39,17 +39,12 @@ const Sidebar = () => {
                     <CommandGroup heading="Listings Management">
                         <CommandItem>
                             <Link href="/listings/properties">
-                                <LayoutDashboard className="mr-2" /> Properties
+                                <LayoutDashboard className="mr-2" />Properties
                             </Link>
                         </CommandItem>
                         <CommandItem>
                             <Link href="/listings/packages">
-                                <Package className="mr-2" /> Packages
-                            </Link>
-                        </CommandItem>
-                        <CommandItem>
-                            <Link href="/listings/activities">
-                                <Activity className="mr-2" /> Activities
+                                <Package className="mr-2" />Packages
                             </Link>
                         </CommandItem>
                     </CommandGroup>
@@ -58,17 +53,17 @@ const Sidebar = () => {
                     <CommandGroup heading="User Management">
                         <CommandItem>
                             <Link href="/users/all">
-                                <User className="mr-2" /> Users
+                                <User className="mr-2" />Users
                             </Link>
                         </CommandItem>
                         <CommandItem>
                             <Link href="/users/organizers">
-                                <User className="mr-2" /> Organizers
+                                <Briefcase className="mr-2" />Organizers
                             </Link>
                         </CommandItem>
                         <CommandItem>
                             <Link href="/users/drivers">
-                                <User className="mr-2" /> Drivers
+                                <Car className="mr-2" />Drivers
                             </Link>
                         </CommandItem>
                     </CommandGroup>
@@ -77,31 +72,31 @@ const Sidebar = () => {
                     <CommandGroup heading="Reports & Analytics">
                         <CommandItem>
                             <Link href="/reports/bookings">
-                                <PieChart className="mr-2" /> Bookings Statistics
+                                <CalendarCheck className="mr-2" />Bookings Stats
                             </Link>
                         </CommandItem>
                         <CommandItem>
                             <Link href="/reports/engagement">
-                                <PieChart className="mr-2" /> User Engagement
+                                <Users className="mr-2" />User Engagement
                             </Link>
                         </CommandItem>
                         <CommandItem>
                             <Link href="/reports/revenue">
-                                <PieChart className="mr-2" /> Revenue Reports
+                                <BarChart2 className="mr-2" />Revenue Reports
                             </Link>
                         </CommandItem>
                     </CommandGroup>
                     <CommandGroup heading="Support and Feedback">
-                        <CommandItem>
+                    <CommandItem>
                             <Link href="/support/communication_logs">
-                                <MessageCircle className="mr-2" /> Bookings Statistics
+                                <Headset className="mr-2 h-4 w-4" />Help Desk
                             </Link>
                         </CommandItem>
                         <CommandItem>
                             <Link href="/support/support tickets">
-                                <MessageCircle className="mr-2" /> User Engagement
+                                <MessagesSquare className="mr-2 h-4 w-4" />Support Center
                             </Link>
-                        </CommandItem>
+                    </CommandItem>
                     </CommandGroup>
                     <CommandSeparator />
 

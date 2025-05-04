@@ -15,27 +15,49 @@ interface HeaderProps {
   userName?: string
   userImage?: string
   loyaltyPoints?: number
+  role?: 'admin' | 'property-owner' | 'driver' | 'customer'
+}
+
+function getGreeting(role: HeaderProps['role'], userName: string) {
+  switch (role) {
+    case 'admin':
+      return `Welcome back, ${userName}. Lets get back to work.`
+    case 'property-owner':
+      return `Welcome back, ${userName}. Manage your property listings here.`
+    case 'driver':
+      return `Welcome back, ${userName}. Ready for your next delivery?`
+    case 'customer':
+      return `Welcome back, ${userName}! Ready for your next adventure?`
+    default:
+      return `Welcome back, ${userName}!`
+  }
 }
 
 export function Header({
   userName = "Sarah",
   userImage = "/placeholder.svg?height=40&width=40",
   loyaltyPoints = 3200,
+  role = 'customer' //for default,
+
 }: HeaderProps) {
   return (
     <header className="border-b bg-background">
       <div className="py-4 px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
         <div className="flex items-center gap-3">
-          <h1 className="text-xl font-medium">
-            Welcome back, <span className="font-bold">{userName}</span>! Ready for your next adventure?
-          </h1>
+        <h1 className="text-xl font-medium">
+          {getGreeting(role, userName)}
+        </h1>
+
         </div>
 
         <div className="flex items-center gap-4">
+          {/* Only show loyalty points for users */}
+          {role !== 'admin' && role !== 'property-owner' && role !== 'driver' && (
           <div className="bg-muted/50 p-2 rounded-md flex items-center gap-2">
             <Star className="h-5 w-5 text-amber-500 fill-amber-500" />
             <span className="font-medium">{loyaltyPoints.toLocaleString()} Points</span>
           </div>
+          )}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -51,9 +73,16 @@ export function Header({
               <div className="flex items-center justify-start gap-2 p-2">
                 <div className="flex flex-col space-y-1 leading-none">
                   <p className="font-medium">{userName}</p>
+                  {['customer', 'driver', 'property-owner', 'admin'].includes(role) && (
                   <Badge variant="outline" className="text-xs">
-                    Gold Member
+                    {{
+                      admin: 'Administrator',
+                      'property-owner': 'Host',
+                      driver: 'Transport Partner',
+                      customer: 'Gold Member',
+                    }[role]}
                   </Badge>
+                )}
                 </div>
               </div>
               <DropdownMenuSeparator />
