@@ -1,4 +1,6 @@
 import Customer from '../DBmodels/customerModel.js';
+import { propertyBooking } from '../DBmodels/bookingModel.js';
+import { Property } from '../DBmodels/ServicesOfferedModel.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -79,5 +81,72 @@ const loginCustomer = async (req, res) => {
 };
 
 //Booking
+const booking = async(req, res)=>{
+    type = req.params
+    if(type == 'property'){
+        const {userId, propertyId, roomType, guests, checkIn, checkOut, price, status} = req.body
+        try{
+            const booking = await propertyBooking.create({userId, propertyId, roomType, guests, checkIn, checkOut, price})
+            res.status(200).json({
+                propertyId: booking.propertyId,
+                roomType: booking.roomType,
+                guests: booking.guests,
+                checkIn: booking.checkIn,
+                checkOut: booking.checkOut
+            })
+        }catch(err){
+            res.status(400).json({error: err.message})
+        }
+    }
+    if(type == 'activity'){
+        
+    }
+}
 
-export { registerCustomer, loginCustomer };
+const search = async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const sortField = req.query.sortBy || 'pricePerNight';
+    const sortOrder = req.query.order === 'desc' ? -1 : 1;
+
+    try {
+      const query = {};
+  
+      if (req.query.propertyType) {
+        const types = Array.isArray(req.query.propertyType)
+          ? req.query.propertyType
+          : [req.query.propertyType];
+        query.propertyType = { $in: types };
+      }
+      
+  
+      if (req.query.city) {
+        query["location.city"] = req.query.city;
+      }
+  
+      if (req.query.country) {
+        query["location.country"] = req.query.country;
+      }
+  
+      if (req.query.name) {
+        query.name = { $regex: req.query.name, $options: "i" }; 
+      }
+  
+      if (req.query.minPrice || req.query.maxPrice) {
+        query.pricePerNight = {};
+        if (req.query.minPrice) query.pricePerNight.$gte = Number(req.query.minPrice);
+        if (req.query.maxPrice) query.pricePerNight.$lte = Number(req.query.maxPrice);
+      }
+  
+      const result = await Property.find(query)
+      .sort({ [sortField]: sortOrder })
+      .skip((page - 1) * limit)
+      .limit(limit);
+      res.status(200).json({ result });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  };
+  
+
+export { registerCustomer, loginCustomer, booking, search };

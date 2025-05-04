@@ -1,13 +1,16 @@
 'use client'
 import TabBar from "@/components/tabbar"
 import {Header} from "@/components/header"
+import { Suspense } from "react"
 export default function CustomerDashboard(){
     return (
           <div>
           <Header/>
           <main className="flex-1 p-6">
           <div>
+          <Suspense fallback={<div>Loading search...</div>}>
             <TabBar/>
+          </Suspense>
           </div>
           <h2 className="text-2xl font-bold mb-6">Your Dashboard</h2>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

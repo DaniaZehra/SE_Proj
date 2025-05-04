@@ -54,6 +54,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
       return(
         <div>
           <Navbar landingPage={true}/>
+          {children}
         </div>
       )
     }
