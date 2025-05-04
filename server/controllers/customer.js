@@ -113,8 +113,12 @@ const search = async (req, res) => {
       const query = {};
   
       if (req.query.propertyType) {
-        query.propertyType = req.query.propertyType;
+        const types = Array.isArray(req.query.propertyType)
+          ? req.query.propertyType
+          : [req.query.propertyType];
+        query.propertyType = { $in: types };
       }
+      
   
       if (req.query.city) {
         query["location.city"] = req.query.city;

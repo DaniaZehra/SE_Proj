@@ -1,4 +1,4 @@
-FROM node:lts-slim
+FROM node:18-slim
 
 WORKDIR /usr/src/app
 
@@ -7,7 +7,6 @@ ENV TAILWIND_DISABLE_OXIDE=1
 
 COPY package*.json ./
 
-# Ensure fresh lockfile
 RUN rm -f package-lock.json && npm install --include=dev
 
 COPY . .
