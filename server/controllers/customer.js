@@ -103,17 +103,46 @@ const booking = async(req, res)=>{
     }
 }
 
-const search = async(req, res) =>{
-    const filter = req.query.filter;
-    try{
-        console.log(filter)
-        const result = await Property.find({propertyType:filter})
-        res.status(200).json({result: [result]})
-        console.log(result)
+const search = async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const sortField = req.query.sortBy || 'pricePerNight';
+    const sortOrder = req.query.order === 'desc' ? -1 : 1;
+
+    try {
+      const query = {};
+  
+      if (req.query.propertyType) {
+        query.propertyType = req.query.propertyType;
+      }
+  
+      if (req.query.city) {
+        query["location.city"] = req.query.city;
+      }
+  
+      if (req.query.country) {
+        query["location.country"] = req.query.country;
+      }
+  
+      if (req.query.name) {
+        query.name = { $regex: req.query.name, $options: "i" }; 
+      }
+  
+      if (req.query.minPrice || req.query.maxPrice) {
+        query.pricePerNight = {};
+        if (req.query.minPrice) query.pricePerNight.$gte = Number(req.query.minPrice);
+        if (req.query.maxPrice) query.pricePerNight.$lte = Number(req.query.maxPrice);
+      }
+  
+      const result = await Property.find(query)
+      .sort({ [sortField]: sortOrder })
+      .skip((page - 1) * limit)
+      .limit(limit);
+      res.status(200).json({ result });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
     }
-    catch(err){
-        res.status(400).json({error: err.message})
-    }
-}
+  };
+  
 
 export { registerCustomer, loginCustomer, booking, search };
