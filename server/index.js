@@ -3,14 +3,19 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import customerRoutes from './routes/customerRoutes.js'
+import adminRoutes from './routes/adminRoutes.js'
+import driverRoutes from './routes/driverRoutes.js'
+import ownerRoutes from './routes/ownerRoutes.js' 
 const app = express();
-import cors from 'cors';
+
 dotenv.config();
 const PORT = process.env.PORT || 4000;
 
 app.get('/', (req, res) => {
   res.send('Hello from the backend!');
 });
+app.use(express.json());
 app.use(cors({ origin: "http://localhost:3000" }));
 app.use('/api/customer', customerRoutes);
 app.use('/api/admin', adminRoutes);
@@ -32,8 +37,3 @@ mongoose.connect(process.env.MONGO_URI, {
 .catch((error)=>{
     console.log(error)
 })
-app.use(express.json());
-app.use('/api/customer',customerRoutes)
-app.use('/api/admin',adminRoutes)
-app.use('/api/owner',ownerRoutes)
-app.use('/api/driver',driverRoutes)
