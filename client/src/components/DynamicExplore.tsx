@@ -12,7 +12,7 @@ interface CardComponentProps {
     title: string,
     description: string,
     children: React.ReactNode,
-    footer: React.ReactNode
+    footer?: React.ReactNode
 }
 
 export default function CardComponent({title, description, children, footer}:CardComponentProps) {

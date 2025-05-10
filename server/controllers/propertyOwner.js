@@ -1,5 +1,5 @@
 import Owner from '../DBmodels/propertyOwnerModel.js';
-import Property from '../DBmodels/propertyModel.js'; 
+import {Property} from '../DBmodels/ServicesOfferedModel.js'; 
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 const registerOwner = async (req, res) => {
@@ -85,12 +85,12 @@ const loginOwner = async (req, res) => {
 };
 
 //Add Property Listing
-
 const CreateProperty = async(req, res) => {
-    const {ownerId, name, description, location, pricePerNight} = req.body;
+    const {ownerId, name, description, location, pricePerNight, propertyType} = req.body;
     try{
-        const property = await Property.create({ownerId, name, description, location, pricePerNight})
+        const property = await Property.create({ownerId, name, description, propertyType, location, pricePerNight})
         res.status(200).json({
+            objectId: property._id,
             name: property.name,
             description: property.description,
             location: property.location,
@@ -100,5 +100,23 @@ const CreateProperty = async(req, res) => {
         res.status(400).json({error:err.message})
     }
 }
-
-export { registerOwner, loginOwner, CreateProperty };
+//update property
+const updateProperty = async (req, res) => {
+    const { _id, newValue } = req.body;
+    const { type } = req.params; // e.g. /updateProperty/:type
+  
+    try {
+      const updateField = {};
+      updateField[type] = newValue;
+  
+      const result = await Property.updateOne(
+        { _id: _id },
+        { $set: updateField }
+      );
+  
+      res.status(200).json({ result });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+};
+export { registerOwner, loginOwner, CreateProperty, updateProperty };

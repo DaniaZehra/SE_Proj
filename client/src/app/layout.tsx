@@ -34,12 +34,12 @@ function AppContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   const noSidebarPaths = ["/login", "/"];
-  const noNavbarPaths = ["/login"];
+  //const noNavbarPaths = ["/login"];
 
   const showSidebar = !(noSidebarPaths.includes(pathname)||pathname.includes('login')||pathname.includes('register'));
-  const showNavbar = !(noNavbarPaths.includes(pathname)||pathname.includes('login')||pathname.includes('register'))
+  //const showNavbar = !(noNavbarPaths.includes(pathname)||pathname.includes('login')||pathname.includes('register'))
 
-  if(showNavbar){
+  //if(showNavbar){
     if(showSidebar){
       return(
         <div>
@@ -54,15 +54,8 @@ function AppContent({ children }: { children: React.ReactNode }) {
       return(
         <div>
           <Navbar landingPage={true}/>
+          {children}
         </div>
       )
     }
-  }
-  else{
-    return(
-      <div>
-        {children}
-      </div>
-    )
-  }
-}
+  //}

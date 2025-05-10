@@ -1,4 +1,5 @@
-FROM node:lts-slim
+FROM node:22-slim
+
 WORKDIR /usr/src/app
 ENV TAILWIND_DISABLE_OXIDE=1
 COPY package*.json ./

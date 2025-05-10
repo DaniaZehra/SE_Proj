@@ -1,6 +1,7 @@
 import TabBar from "@/components/tabbar";
 import BestDeals from "@/components/best_deals_carousel";
 import HeaderCarousel from "@/components/ui/carousel";
+import { Suspense } from "react";
 
 export default function Home() {
   return (
@@ -11,7 +12,9 @@ export default function Home() {
       </div>
       <div className="absolute w-full flex justify-center top-36 z-[20]">
         <div className="bg-slate-100 rounded-lg"> 
+        <Suspense fallback={<div>Loading search...</div>}>
           <TabBar />
+        </Suspense>
         </div>
       </div>
       </div>
