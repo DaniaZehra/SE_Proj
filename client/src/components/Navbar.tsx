@@ -89,49 +89,67 @@ export function Navbar({ landingPage = false }: NavbarProps) {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Only show Login/Register dropdown when NOT on auth pages */}
           {!isAuthPage && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="gap-1">
-                  <User className="h-4 w-4" />
-                  <span className="hidden sm:inline-block">Login/Register</span>
-                  <ChevronDown className="h-4 w-4 opacity-50" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 bg-slate-50">
-                <DropdownMenuLabel>Login As</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => router.push('/login/customer')}>
-                  Customer
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push('/login/driver')}>
-                  Driver
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push('/login/owner')}>
-                  Property Owner
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push('/login/admin')}>
-                  Admin
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuLabel>Register As</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => router.push('/register/customer')}>
-                  Customer
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push('/register/driver')}>
-                  Driver
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push('/register/owner')}>
-                  Property Owner
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push('/register/admin')}>
-                  Admin
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="gap-1">
+                <User className="h-4 w-4" />
+                <span className="hidden sm:inline-block">Login/Register</span>
+                <ChevronDown className="h-4 w-4 opacity-50" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 bg-slate-50">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    <div className="flex items-center justify-between w-full">
+                      <span>Login As</span>
+                      <ChevronDown className="h-4 w-4 opacity-50" />
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="right" className="w-48 bg-slate-50">
+                  <DropdownMenuItem onClick={() => router.push('/login/customer')}>
+                    Customer
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/login/driver')}>
+                    Driver
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/login/owner')}>
+                    Property Owner
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/login/admin')}>
+                    Admin
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    <div className="flex items-center justify-between w-full">
+                      <span>Register As</span>
+                      <ChevronDown className="h-4 w-4 opacity-50" />
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="right" className="w-48 bg-slate-50">
+                  <DropdownMenuItem onClick={() => router.push('/register/customer')}>
+                    Customer
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/register/driver')}>
+                    Driver
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/register/owner')}>
+                    Property Owner
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
 
           {/* Only show notifications and profile when NOT on landing page AND NOT on auth pages */}
           {!landingPage && !isAuthPage && (
@@ -182,7 +200,7 @@ export function Navbar({ landingPage = false }: NavbarProps) {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src="/user.png" alt="User" />
+                      <AvatarImage src="/placeholder.svg?height=32&width=32" alt="User" />
                       <AvatarFallback>JD</AvatarFallback>
                     </Avatar>
                   </Button>
