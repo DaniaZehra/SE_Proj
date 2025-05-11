@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import "./globals.css";
 import LayoutWithSidebar from "@/components/LayoutWithSidebar";
 import { Navbar } from "@/components/Navbar";
+import { initPostHog } from '../lib/posthog';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,6 +22,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  if (typeof window !== 'undefined') {
+    initPostHog();
+  }
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
