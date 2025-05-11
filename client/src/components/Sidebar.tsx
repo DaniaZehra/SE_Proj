@@ -57,11 +57,13 @@ const defaultNavigationItems: NavigationItem[] = [
     url: "/upcoming",
   },
   {
-    title: "Calendar",
-    icon: Calendar,
-    url: "/calendar",
+    title: "Browse Activities",
+    url: "/all-activities",
   },
-
+  {
+    title: "List my Activity",
+    url: "/list-activity"
+  },
   {
     title: "Settings",
     icon: Settings,

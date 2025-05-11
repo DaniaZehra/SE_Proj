@@ -3,6 +3,8 @@ import Driver from '../DBmodels/driverModel.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import axios from 'axios';
+import { Ride } from '../DBmodels/ServicesOfferedModel.js';
 dotenv.config();
 
 // Register
@@ -90,5 +92,56 @@ const loginDriver = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+//estimate fare
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const estimateFare = async (pickupLocation, dropoffLocation) => {
+  try {
+    if (!pickupLocation || !dropoffLocation) {
+      throw new Error('Origin and destination are required');
+    }
 
-export { registerDriver, loginDriver };
+    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(pickupLocation)}&destinations=${encodeURIComponent(dropoffLocation)}&key=${process.env.GOOGLE_API_KEY}`;
+    const response = await axios.get(url);
+    
+    console.log('Google Maps API response:', response.data);
+
+    if (
+      response.data.status !== 'OK' ||
+      !response.data.rows ||
+      !response.data.rows[0] ||
+      !response.data.rows[0].elements ||
+      !response.data.rows[0].elements[0].distance
+    ) {
+      throw new Error('Unable to get distance from API');
+    }
+
+    const distanceInKm = response.data.rows[0].elements[0].distance.value / 1000;
+    return distanceInKm * 55;  
+  } catch (error) {
+    throw new Error('Error estimating fare: ' + error.message);
+  }
+};
+
+const addRide = async (req, res) => {
+    const driverId = req.params.driverId;
+    const {pickupLocation, dropoffLocation } = req.body;
+
+    try {
+        const fare = await estimateFare(pickupLocation, dropoffLocation);
+        const newRide = new Ride({
+            driverId,
+            pickupLocation,
+            dropoffLocation,
+            rideDate : new Date(),
+            fare,
+            status: 'available'  
+        });
+        await newRide.save(); 
+
+        res.status(201).json({ message: 'Ride added successfully', ride: newRide });
+    } catch (error) {
+        console.error('Error adding ride:', error);
+        res.status(500).json({ message: `Error adding ride: ${error.message}` });
+    }
+};
+export { registerDriver, loginDriver,addRide };

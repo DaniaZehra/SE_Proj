@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CardComponent from "./DynamicExplore";
 import  Form  from 'next/form'; 
 import {useRouter} from 'next/navigation'
-
+import SearchForm from "@/components/searchRidesForm";
 
 
 export default function TabBar() {
@@ -43,15 +43,15 @@ export default function TabBar() {
               Properties
             </TabsTrigger>
             <TabsTrigger 
-              value="drivers"
-              className="px-6 py-2 text-base font-medium border-2px-solid
-              data-[state=active]:bg-primary 
-              data-[state=active]:text-primary-foreground
-              hover:bg-primary/90
-              transition-colors"
+            value="rides"
+            className="px-6 py-2 text-base font-medium border-2px-solid
+            data-[state=active]:bg-primary 
+            data-[state=active]:text-primary-foreground
+            hover:bg-primary/90
+            transition-colors"
             >
-              Drivers
-            </TabsTrigger>
+            Rides
+          </TabsTrigger>
             <TabsTrigger 
               value="flights"
               className="px-6 py-2 text-base font-medium border-2px-solid
@@ -104,13 +104,15 @@ export default function TabBar() {
             </div>
         </TabsContent>
 
-        <TabsContent value="drivers" className="mt-6">
+        <TabsContent value="rides" className="mt-6">
           <CardComponent 
-            title="Search for Drivers"
-            description="Find professional drivers"
-            footer={<button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Request</button>}
+            title="Search for Rides"
+            description="Find available rides"
           >
-            <div className="p-4">Driver search form would go here</div>
+            <div className="p-4">
+              {/* fromDashboard is false since this is from landing page */}
+              <SearchForm fromDashboard={false} />
+            </div>
           </CardComponent>
         </TabsContent>
 

@@ -6,11 +6,11 @@ const propertyBookingsSchema = new Schema({
     propertyId: Types.ObjectId,
     propertyName: String,
     roomType: String,
-    guests: {type:Number},
+    guests: {type: Number},
     checkIn: Date,
     checkOut: Date,
     price: {type: Number},
-    status: {type: String, enum: ['confirmed' | 'cancelled' | 'completed' | 'pending'], default: "pending"},
+    status: {type: String, enum: ['confirmed', 'cancelled', 'completed', 'pending'], default: "pending"},
     createdAt: Date,
     updatedAt: Date
 })
@@ -76,9 +76,6 @@ propertyBookingsSchema.post('findOneAndDelete', async function(doc) {
   }
 }); 
 
-const propertyBooking = model('propertyBooking',propertyBookingsSchema)
-
-
 const activityBookingSchema = new Schema({
   userId: { type: Types.ObjectId, ref: "User", required: true },
   activityId: { type: Types.ObjectId, ref: "Activity", required: true },
@@ -90,11 +87,35 @@ const activityBookingSchema = new Schema({
   },
   totalPrice: {type: Number, required: true},
   loyaltyPointsEarned: { type: Number, default: 0 },
-  schedule: { date: { type: Date, required: true },
-  time: { type: String, required: true }},
+  schedule: { 
+    date: { type: Date, required: true },
+    time: { type: String, required: true }
+  },
   createdAt: { type: Date, default: Date.now }
 });
 
+const rideBookingSchema = new Schema({
+    customerId: { type: Types.ObjectId, ref: 'Customer', required: true },
+    rideId: { type: Types.ObjectId, ref: 'Ride', required: true },
+    bookingDate: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'completed', 'cancelled'],
+        default: 'pending'
+    },
+    fare: {
+        type: Number,
+        required: true
+    }
+});
 
-const activityBooking = model('activityBooking', activityBookingSchema)
-export {propertyBooking, activityBooking}
+// Check if models already exist before creating them
+const PropertyBooking = mongoose.models.propertyBooking || model('propertyBooking', propertyBookingsSchema);
+const ActivityBooking = mongoose.models.activityBooking || model('activityBooking', activityBookingSchema);
+const RideBooking = mongoose.models.RideBooking || model('RideBooking', rideBookingSchema);
+
+export { PropertyBooking, ActivityBooking, RideBooking };
