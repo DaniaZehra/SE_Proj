@@ -75,11 +75,11 @@ export default function RegisterForm({ role }) {
 
     try {
       const response = await fetch(`http://localhost:4000/api/${role}/register`, {
+        credentials: 'include', 
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
         },
-        credentials: 'include', 
         body: JSON.stringify({
           firstname: formData.firstname,
           lastname: formData.lastname,

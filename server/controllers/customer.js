@@ -82,70 +82,173 @@ const loginCustomer = async (req, res) => {
 };
 
 //Booking
-const booking = async(req, res)=>{
-    type = req.params
-    if(type == 'property'){
-        const {userId, propertyId, roomType, guests, checkIn, checkOut, price, status} = req.body
-        try{
-            const booking = await propertyBooking.create({userId, propertyId, roomType, guests, checkIn, checkOut, price})
-            res.status(200).json({
-                propertyId: booking.propertyId,
-                roomType: booking.roomType,
-                guests: booking.guests,
-                checkIn: booking.checkIn,
-                checkOut: booking.checkOut
-            })
-        }catch(err){
-            res.status(400).json({error: err.message})
-        }
+const booking = async (req, res) => {
+  const { userId, propertyId, propertyType, guests, checkIn, checkOut, price} = req.body;
+
+  try {
+    // Validate required fields
+    if (!userId || !propertyId || !checkIn || !checkOut) {
+      return res.status(400).json({ error: "Missing required fields" });
     }
-    if(type == 'activity'){
-        
+
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+    const currentDate = new Date();
+
+    if (checkInDate >= checkOutDate) {
+      return res.status(400).json({ error: "Check-out date must be after check-in date" });
     }
+
+    if (checkInDate < currentDate) {
+      return res.status(400).json({ error: "Check-in date cannot be in the past" });
+    }
+
+    const oneDay = 24 * 60 * 60 * 1000;
+    if ((checkOutDate - checkInDate) < oneDay) {
+      return res.status(400).json({ error: "Minimum stay is 1 night" });
+    }
+
+    // Guest validation
+    if (!guests || guests < 1) {
+      return res.status(400).json({ error: "At least 1 guest is required" });
+    }
+
+    if (!price || price <= 0) {
+      return res.status(400).json({ error: "Invalid price" });
+    }
+    const booking = await propertyBooking.create({
+      userId,
+      propertyId,
+      propertyType,
+      guests,
+      checkIn: checkInDate,
+      checkOut: checkOutDate,
+      price,
+      status: status || "pending"
+    });
+
+    res.status(200).json({
+      bookingId: booking._id,
+      propertyId: booking.propertyId,
+      propertyType: booking.propertyType,
+      guests: booking.guests,
+      checkIn: booking.checkIn,
+      checkOut: booking.checkOut,
+      price: booking.price,
+      status: booking.status
+    });
+
+  } catch (err) {
+    console.error("Booking error:", err);
+    res.status(400).json({ 
+      error: err.message || "Failed to create booking",
+      details: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    });
+  }
+};
+
+//Search function
+const search = async (req, res) => {
+  console.log(req.query.city)
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const sortField = req.query.sortBy || 'pricePerNight';
+  const sortOrder = req.query.order === 'desc' ? -1 : 1;
+
+  try {
+    const query = {};
+
+    if (req.query.propertyType) {
+      const types = Array.isArray(req.query.propertyType)
+        ? req.query.propertyType
+        : [req.query.propertyType];
+      query.propertyType = { $in: types };
+    }
+    
+
+    if (req.query.city) {
+      query["location.city"] = req.query.city;
+    }
+
+    if (req.query.country) {
+      query["location.country"] = req.query.country;
+    }
+
+    if (req.query.name) {
+      query.name = { $regex: req.query.name, $options: "i" }; 
+    }
+
+    if (req.query.minPrice || req.query.maxPrice) {
+      query.pricePerNight = {};
+      if (req.query.minPrice) query.pricePerNight.$gte = Number(req.query.minPrice);
+      if (req.query.maxPrice) query.pricePerNight.$lte = Number(req.query.maxPrice);
+    }
+
+    const result = await Property.find(query)
+    .sort({ [sortField]: sortOrder })
+    .skip((page - 1) * limit)
+    .limit(limit);
+    const total = await Property.countDocuments(query);
+    console.log(total)
+    res.status(200).json({
+      properties: result,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalResults: total
+  });
+  }catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+  
+//List Activity 
+
+const listActivity = async(req, res)=>{
+  const {title, description, location, schedule, price, specialNeeds, images, createdBy} = req.body
+  if(!title || !description || !location.address || !location.city || !location.country || !createdBy.userId || !createdBy.name || !createdBy.contactNo){
+    throw("Missing key fields please try again")
+  }
+  try{
+    const activity = await Activity.create({
+      title,
+      description,
+      createdBy,
+      images: images || '/placeholder.jpg',
+      schedule,
+      price, 
+      specialNeeds,
+      location
+    })
+
+    res.status(200).json({
+      title: activity.title,
+      description:activity.description,
+      createdBy: activity.createdBy,
+      schedule: activity.schedule,
+      price: activity.price,
+      location: activity.location
+    })
+  }catch(error){
+    res.status(400).json({ error: error.message });
+  }
+
 }
 
-const search = async (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const sortField = req.query.sortBy || 'pricePerNight';
-    const sortOrder = req.query.order === 'desc' ? -1 : 1;
+//Edit Activity
 
-    try {
-      const query = {};
-  
-      if (req.query.propertyType) {
-        const types = Array.isArray(req.query.propertyType)
-          ? req.query.propertyType
-          : [req.query.propertyType];
-        query.propertyType = { $in: types };
-      }
-      
-  
-      if (req.query.city) {
-        query["location.city"] = req.query.city;
-      }
-  
-      if (req.query.country) {
-        query["location.country"] = req.query.country;
-      }
-  
-      if (req.query.name) {
-        query.name = { $regex: req.query.name, $options: "i" }; 
-      }
-  
-      if (req.query.minPrice || req.query.maxPrice) {
-        query.pricePerNight = {};
-        if (req.query.minPrice) query.pricePerNight.$gte = Number(req.query.minPrice);
-        if (req.query.maxPrice) query.pricePerNight.$lte = Number(req.query.maxPrice);
-      }
-  
-      const result = await Property.find(query)
-      .sort({ [sortField]: sortOrder })
-      .skip((page - 1) * limit)
-      .limit(limit);
-      res.status(200).json({ result });
-    } catch (err) {
-      res.status(400).json({ error: err.message });
+const editActivity = async (req, res) => {
+  const activityId = req.params.id;
+  const updates = req.body;
+
+  if (!activityId) {
+    return res.status(400).json({ error: "Activity ID is required" });
+  }
+
+  try {
+    const activity = await Activity.findById(activityId);
+    if (!activity) {
+      return res.status(404).json({ error: "Activity not found" });
     }
   };
 //searching rides
