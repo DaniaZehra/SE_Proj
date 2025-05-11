@@ -87,7 +87,6 @@ const activitySchema = new Schema({
   }
 });
 
-
 const rideSchema = new Schema({
     driverId: { type: mongoose.Schema.Types.ObjectId, ref: 'Driver', required: true },
     pickupLocation: {
@@ -114,11 +113,10 @@ const rideSchema = new Schema({
 });
 
 // Check if models already exist before creating them
-
-const Activity = mongoose.models.Activity || model('Activity',activitySchema)
+const Activity = mongoose.models.Activity || model('Activity', activitySchema);
 const Property = mongoose.models.Property || model('Property', propertySchema);
 const Ride = mongoose.models.Ride || model('Ride', rideSchema);
 
-export { Property, Ride, Activity }
+export { Property, Ride, Activity };
 
 

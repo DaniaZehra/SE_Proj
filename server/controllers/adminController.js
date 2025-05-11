@@ -1,4 +1,4 @@
-import { Property,Activity } from '../DBmodels/servicesOfferedModel.js';
+import { Property, Activity } from '../DBmodels/servicesOfferedModel.js';
 import { propertyBooking } from '../DBmodels/bookingModel.js';
 import { activityBooking } from '../DBmodels/bookingModel.js';
 
@@ -122,7 +122,8 @@ export const getPendingActivityBookings = async (req, res) => {
                     activity: activity ? {
                         title: activity.title,
                         location: activity.location,
-                        price: activity.price
+                        price: activity.price,
+                        type: activity.type
                     } : null
                 };
             })

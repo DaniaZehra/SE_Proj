@@ -26,6 +26,7 @@ interface ActivityBooking {
       country: string;
     };
     price: number;
+    type: string;
   } | null;
 }
 
@@ -46,8 +47,7 @@ export default function ManageActivities() {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
-        },
-        credentials: 'include'
+        }
       });
 
       if (!response.ok) {
@@ -85,7 +85,6 @@ export default function ManageActivities() {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
-          credentials: 'include',
           body: JSON.stringify({ status })
         }
       );
@@ -132,6 +131,7 @@ export default function ManageActivities() {
                   <p><strong>Total Price:</strong> ${booking.totalPrice || 0}</p>
                   <p><strong>Loyalty Points:</strong> {booking.loyaltyPointsEarned || 0}</p>
                   <p><strong>Location:</strong> {booking.activity?.location ? `${booking.activity.location.address}, ${booking.activity.location.city}, ${booking.activity.location.country}` : 'Not specified'}</p>
+                  <p><strong>Activity Type:</strong> {booking.activity?.type || 'Not specified'}</p>
                   <div className="flex gap-4 mt-4">
                     <Button
                       onClick={() => handleBookingStatusUpdate(booking._id, 'confirmed')}

@@ -33,27 +33,24 @@ export default function AdminDashboard() {
             </div>
           </Link>
 
-
           <Link href="/admin/pending-properties">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardHeader>
-                <CardTitle>Pending Properties</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Manage pending property listings</p>
-              </CardContent>
-            </Card>
+            <div className="rounded-lg border bg-card p-6 hover:shadow-md transition-shadow cursor-pointer">
+              <div className="flex items-center gap-3 mb-2">
+                <Home className="h-5 w-5 text-green-500" />
+                <h3 className="font-semibold text-lg">Manage Property Listings</h3>
+              </div>
+              <p className="text-muted-foreground">Review and manage property listings</p>
+            </div>
           </Link>
 
           <Link href="/admin/manage-activities">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardHeader>
-                <CardTitle>Manage Activities</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Manage activity bookings</p>
-              </CardContent>
-            </Card>
+            <div className="rounded-lg border bg-card p-6 hover:shadow-md transition-shadow cursor-pointer">
+              <div className="flex items-center gap-3 mb-2">
+                <Luggage className="h-5 w-5 text-purple-500" />
+                <h3 className="font-semibold text-lg">Manage Activities</h3>
+              </div>
+              <p className="text-muted-foreground">Manage and handle activities</p>
+            </div>
           </Link>
 
           <div className="rounded-lg border bg-card p-6 hover:shadow-md transition-shadow">

@@ -145,7 +145,7 @@ export default function PendingProperties() {
         ))}
         {bookings.length === 0 && (
           <div className="col-span-full text-center text-gray-500">
-            No pending bookings found
+            No pending property listings found
           </div>
         )}
       </div>

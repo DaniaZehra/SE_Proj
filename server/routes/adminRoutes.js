@@ -23,7 +23,7 @@ const router = express.Router();
 router.use(cookieParser());
 
 router.post('/login', loginAdmin);
-router.post('/register',registerAdmin);
+router.post('/register', registerAdmin);
 router.get('/users', requireAuth, getAllUsers);
 router.get('/users/:id', requireAuth, getUser);
 router.patch('/users/:id', requireAuth, updateUser);
