@@ -42,8 +42,15 @@ export default function LoginForm({ role }) {
 
       const data = await response.json();
       setSuccessMessage("Login successful!"); // Set success message
+      localStorage.setItem('token', data.token);
+
+      // Store ownerId if logging in as property owner
+      if (role === "propertyOwner" && data.owner && data.owner._id) {
+        localStorage.setItem("ownerId", data.owner._id);
+      }
+
       setTimeout(() => {
-        router.push(`/${role}/dashboard`);
+        router.push(`/${role}`);
       }, 1500); // Redirect after showing message
       
     } catch (err) {

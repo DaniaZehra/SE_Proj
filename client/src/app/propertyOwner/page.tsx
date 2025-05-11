@@ -2,8 +2,20 @@
 
 import { Header } from "@/components/header";
 import { Home, PlusSquare, Calendar, MessageSquare, Star, BarChart2 } from "lucide-react";
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function PropertyOwnerDashboard() {
+  const [ownerId, setOwnerId] = useState<string | null>(null);
+
+  useEffect(() => {
+      console.log(ownerId);
+    if (typeof window !== 'undefined') {
+      const storedId = localStorage.getItem('ownerId');
+      if (storedId) setOwnerId(storedId);
+    }
+  }, []);
+
   const currentUser = {
     name: "John Doe",
     image: "/property-owner.png",
@@ -14,20 +26,19 @@ export default function PropertyOwnerDashboard() {
       <Header
         userName={currentUser.name}
         userImage={currentUser.image}
-        role="property-owner"
+        role="propertyOwner"
       />
 
       <main className="flex-1 p-6">
         <h2 className="text-2xl font-bold mb-6">Property Owner Dashboard</h2>
-
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
-          <div className="rounded-lg border bg-card p-6 hover:shadow-md transition-shadow">
+          <Link href={`/propertyOwner/properties/${ownerId}`} className="rounded-lg border bg-card p-6 hover:shadow-md transition-shadow block">
             <div className="flex items-center gap-3 mb-2">
               <Home className="h-5 w-5 text-blue-500" />
               <h3 className="font-semibold text-lg">My Properties</h3>
             </div>
             <p className="text-muted-foreground">View and manage your listings</p>
-          </div>
+          </Link>
 
           <div className="rounded-lg border bg-card p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center gap-3 mb-2">

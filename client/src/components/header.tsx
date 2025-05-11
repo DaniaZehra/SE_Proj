@@ -15,14 +15,14 @@ interface HeaderProps {
   userName?: string
   userImage?: string
   loyaltyPoints?: number
-  role?: 'admin' | 'property-owner' | 'driver' | 'customer'
+  role?: 'admin' | 'propertyOwner' | 'driver' | 'customer'
 }
 
 function getGreeting(role: HeaderProps['role'], userName: string) {
   switch (role) {
     case 'admin':
       return `Welcome back, ${userName}. Lets get back to work.`
-    case 'property-owner':
+    case 'propertyOwner':
       return `Welcome back, ${userName}. Manage your property listings here.`
     case 'driver':
       return `Welcome back, ${userName}. Ready for your next delivery?`
@@ -52,7 +52,7 @@ export function Header({
 
         <div className="flex items-center gap-4">
           {/* Only show loyalty points for users */}
-          {role !== 'admin' && role !== 'property-owner' && role !== 'driver' && (
+          {role !== 'admin' && role !== 'propertyOwner' && role !== 'driver' && (
           <div className="bg-muted/50 p-2 rounded-md flex items-center gap-2">
             <Star className="h-5 w-5 text-amber-500 fill-amber-500" />
             <span className="font-medium">{loyaltyPoints.toLocaleString()} Points</span>
@@ -77,7 +77,7 @@ export function Header({
                   <Badge variant="outline" className="text-xs">
                     {{
                       admin: 'Administrator',
-                      'property-owner': 'Host',
+                      'propertyOwner': 'Host',
                       driver: 'Transport Partner',
                       customer: 'Gold Member',
                     }[role]}

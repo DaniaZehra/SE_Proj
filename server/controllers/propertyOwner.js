@@ -72,6 +72,7 @@ const loginOwner = async (req, res) => {
         res.status(200).json({
             message: 'Login successful.',
             owner: {
+                _id: owner._id,
                 firstname: owner.firstname,
                 lastname: owner.lastname,
                 email: owner.email,
@@ -83,40 +84,73 @@ const loginOwner = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
-
-//Add Property Listing
-const CreateProperty = async(req, res) => {
-    const {ownerId, name, description, location, pricePerNight, propertyType} = req.body;
-    try{
-        const property = await Property.create({ownerId, name, description, propertyType, location, pricePerNight})
-        res.status(200).json({
-            objectId: property._id,
-            name: property.name,
-            description: property.description,
-            location: property.location,
-            pricePerNight: property.pricePerNight
-        });  
-    }catch(err){
-        res.status(400).json({error:err.message})
-    }
-}
-//update property
 const updateProperty = async (req, res) => {
-    const { _id, newValue } = req.body;
-    const { type } = req.params; // e.g. /updateProperty/:type
-  
+  const { id } = req.params;
+  const updates = req.body;
+
+  try {
+    const property = await Property.findById(id);
+    if (!property) {
+      return res.status(404).json({ error: 'Property not found' });
+    }
+
+    const updatedProperty = await Property.findByIdAndUpdate(
+      id,
+      { $set: updates },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json(updatedProperty);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+const getPropertyById = async(req, res) => {
+    const {id} = req.params;
     try {
-      const updateField = {};
-      updateField[type] = newValue;
-  
-      const result = await Property.updateOne(
-        { _id: _id },
-        { $set: updateField }
-      );
-  
-      res.status(200).json({ result });
-    } catch (err) {
-      res.status(400).json({ error: err.message });
+        // Use findById instead of find for single documents
+        const property = await Property.findById(id);
+        
+        if (!property) {
+            return res.status(404).json({ error: "Property not found" });
+        }
+
+        console.log('Property data:', property); // Debug log
+        
+        // Return the property directly, not wrapped in {result: property}
+        res.status(200).json(property);
+
+    } catch(error) {
+        console.error('Database error:', error);
+        res.status(400).json({ 
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
     }
 };
-export { registerOwner, loginOwner, CreateProperty, updateProperty };
+
+const getPropertiesByOwnerId = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const properties = await Property.find({ ownerId: id });
+    res.status(200).json(properties);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const deleteProperty = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const property = await Property.findByIdAndDelete(id);
+    if (!property) {
+      return res.status(404).json({ error: 'Property not found' });
+    }
+    res.status(200).json({ message: 'Property deleted successfully' });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+export { registerOwner, loginOwner, updateProperty, getPropertyById, getPropertiesByOwnerId, deleteProperty };

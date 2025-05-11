@@ -21,11 +21,11 @@ const adminSchema = new Schema({
 }, { timestamps: true });
 
 adminSchema.statics = {
-    async getallUsers() {
+    async getAllUsers() {  
         return this.find({}).select('-password');
     },
-    async getuserbyId(userId) {
-        return this.find(userId).select('-password');
+    async getUserById(userId) { 
+        return this.findById(userId).select('-password'); 
     },
     async updateUser(userId, updateData) {
         return this.findByIdAndUpdate(

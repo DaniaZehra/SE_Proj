@@ -40,12 +40,12 @@ export function Navbar({ landingPage = false }: NavbarProps) {
   // Comprehensive list of all auth paths
   const authPaths = [
     '/login/customer',
-    '/login/owner',
+    '/login/propertyOwner',
     '/login/admin',
     '/login/driver',
     '/register/admin',
     '/register/customer',
-    '/register/owner',
+    '/register/propertyOwner',
     '/register/driver'
   ]
   const isAuthPage = authPaths.some(path => pathname?.startsWith(path))
@@ -115,7 +115,7 @@ export function Navbar({ landingPage = false }: NavbarProps) {
                   <DropdownMenuItem onClick={() => router.push('/login/driver')}>
                     Driver
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/login/owner')}>
+                  <DropdownMenuItem onClick={() => router.push('/login/propertyOwner')}>
                     Property Owner
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push('/login/admin')}>
@@ -142,7 +142,7 @@ export function Navbar({ landingPage = false }: NavbarProps) {
                   <DropdownMenuItem onClick={() => router.push('/register/driver')}>
                     Driver
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/register/owner')}>
+                  <DropdownMenuItem onClick={() => router.push('/register/propertyOwner')}>
                     Property Owner
                   </DropdownMenuItem>
                 </DropdownMenuContent>

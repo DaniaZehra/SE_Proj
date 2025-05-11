@@ -10,7 +10,7 @@ const propertySchema = new Schema(
       city: String,
       country: String,
     },
-    propertyType:{type:String, enum:['Hotel'|'Rest House'|'Apartment'|'Hostel'|'Room'|'Home']},
+    propertyType: {type: String, enum: ['Hotel', 'Rest House', 'Apartment', 'Hostel', 'Room', 'Home']},
     pricePerNight: Number,
     amenities: [String],
     availability: [
