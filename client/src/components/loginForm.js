@@ -41,13 +41,14 @@ export default function LoginForm({ role }) {
       }
 
       const data = await response.json();
-      if (data[role] && data[role]._id) {
-      localStorage.setItem(`${role}Id`, data[role]._id); 
-    }
-      setSuccessMessage("Login successful!"); 
+      setSuccessMessage("Login successful!"); // Set success message
       setTimeout(() => {
-        router.push(`/${role}/dashboard`);
-      }, 1500); 
+        if(role=='customer')
+        {
+           router.push(`/customer-dashboard`);
+        }
+        router.push(`/${role}`);
+      }, 1500); // Redirect after showing message
       
     } catch (err) {
       console.error("Login error:", err);
