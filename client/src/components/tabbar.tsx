@@ -23,6 +23,7 @@ export default function TabBar() {
     queryParams.append('sortBy', 'pricePerNight');
     queryParams.append('order', priceOrder);
 
+    console.log(`query params from tabbar: ${queryParams.toString()}`)
     router.push(`/search-results?${queryParams.toString()}`);
   };
 
