@@ -19,18 +19,74 @@ const propertySchema = new Schema(
         isAvailable: Boolean
       }
     ],
-    // images: [String],
-    // filters: {
-    //   space: String,
-    //   specialNeeds: [String]
-    // },
-    // ratings: [Number],
+    images: [String],
+    filters: {
+      space: String,
+      specialNeeds: [String]
+    },
+    ratings: [Number],
     createdAt: Date,
     updatedAt: Date
   }
 )
 const Property = mongoose.model('Property', propertySchema)
 
-export {Property}
+const activitySchema = new Schema({
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+
+  location: {
+    address: { type: String, required: true },
+    city: { type: String, required: true },
+    country: { type: String, required: true }
+  },
+
+  createdBy: {
+    userId: { type: Types.ObjectId, ref: 'User', required: true },
+    name: { type: String, required: true },
+    contactNo: { type: String, required: true }
+  },
+
+  schedule: [
+    {
+      date: { type: Date, required: true },
+      time: { type: String, required: true },
+      slotsAvailable: { type: Number, required: true },
+      maxSlots: { type: Number, required: true }
+    }
+  ],
+
+  price: {type: Number, required: true },
+
+  specialNeeds: [{ type: String }],
+  images: [{ type: String }],
+
+  ratings: {
+    average: { type: Number, default: 0 },
+    count: { type: Number, default: 0 }
+  },
+
+  reviews: [
+    {
+      userId: { type: Types.ObjectId, ref: 'User' },
+      comment: String,
+      rating: Number,
+      date: { type: Date, default: Date.now }
+    }
+  ],
+
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+
+  isActive: {
+    type: String,
+    enum: ['pending request', 'request in review', 'request denied', 'request reviewed'],
+    default: 'pending request'
+  }
+});
+
+const Activity = model('Activity',activitySchema)
+
+export {Property, Activity}
 
 

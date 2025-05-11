@@ -8,7 +8,7 @@ import {
     deleteUser
 } from '../controllers/admin.js';
 import { getAllUsers } from '../controllers/admin.js';
-import { requireAuth} from '../middleware.js';
+import requireAuth from '../middleware.js';
 
 const router = express.Router();
 router.post('/register', registerAdmin);

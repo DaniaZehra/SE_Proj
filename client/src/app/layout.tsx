@@ -39,23 +39,23 @@ function AppContent({ children }: { children: React.ReactNode }) {
   const showSidebar = !(noSidebarPaths.includes(pathname)||pathname.includes('login')||pathname.includes('register'));
   //const showNavbar = !(noNavbarPaths.includes(pathname)||pathname.includes('login')||pathname.includes('register'))
 
-  //if(showNavbar){
-    if(showSidebar){
-      return(
-        <div>
-          <Navbar/>
-          <div className="flex">
-            <LayoutWithSidebar>{children}</LayoutWithSidebar>
-          </div>
+  // if(showNavbar){
+  if(showSidebar){
+    return(
+      <div>
+        <Navbar/>
+        <div className="flex">
+          <LayoutWithSidebar>{children}</LayoutWithSidebar>
         </div>
-      )
-    }
-    else{
-      return(
-        <div>
-          <Navbar landingPage={true}/>
+        </div>
+    )
+  }
+  else{
+    return(
+      <div>
+        <Navbar landingPage={true}/>
           {children}
         </div>
       )
-    }
-  //}
+  }
+}
