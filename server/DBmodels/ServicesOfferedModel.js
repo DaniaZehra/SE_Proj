@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
-const {Schema, model, Types} = mongoose
+const { Schema, model, Types } = mongoose
 
 const propertySchema = new Schema(
-{
+  {
     ownerId: Types.ObjectId,
     name: String,
     description: String,
@@ -10,7 +10,7 @@ const propertySchema = new Schema(
       city: String,
       country: String,
     },
-    propertyType: {type: String, enum: ['Hotel', 'Rest House', 'Apartment', 'Hostel', 'Room', 'Home']},
+    propertyType: { type: String, enum: ['Hotel', 'Rest House', 'Apartment', 'Hostel', 'Room', 'Home'] },
     pricePerNight: Number,
     amenities: [String],
     availability: [
@@ -19,6 +19,11 @@ const propertySchema = new Schema(
         isAvailable: Boolean
       }
     ],
+    status: {
+      type: String,
+      enum: ['pending', 'approved', 'cancelled'],
+      default: 'pending',
+    },
     // images: [String],
     // filters: {
     //   space: String,
@@ -31,6 +36,6 @@ const propertySchema = new Schema(
 )
 const Property = mongoose.model('Property', propertySchema)
 
-export {Property}
+export { Property }
 
 
