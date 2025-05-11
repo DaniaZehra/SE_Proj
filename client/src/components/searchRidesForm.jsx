@@ -81,7 +81,7 @@ export default function SearchForm({ fromDashboard = false, customerId = null })
       initializeMap();
     } else {
       const script = document.createElement("script");
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_API_KEY}`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBASI7w3mC4GGLS-AnwWCWO8-A_j4dtxNo`;
       script.async = true;
       script.defer = true;
       script.onload = initializeMap;
