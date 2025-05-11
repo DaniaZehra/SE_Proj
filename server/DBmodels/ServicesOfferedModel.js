@@ -29,8 +29,35 @@ const propertySchema = new Schema(
     updatedAt: Date
   }
 )
+const rideSchema = new Schema({
+    driverId: { type: mongoose.Schema.Types.ObjectId, ref: 'Driver', required: true },
+    pickupLocation: {
+        type: String,
+        required: true
+    },
+    dropoffLocation: {
+        type: String,
+        required: true
+    },
+    rideDate: {
+        type: Date,
+        required: true
+    },
+    status: {
+        type: String,
+        enum: ['available', 'booked'],
+        default: 'available'
+    },
+    fare: {
+        type: Number,
+        required: true
+    }
+});
+
+const Ride = model('Ride', rideSchema);
+
 const Property = mongoose.model('Property', propertySchema)
 
-export {Property}
+export {Property,Ride}
 
 

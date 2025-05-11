@@ -14,7 +14,24 @@ const propertyBookingsSchema = new Schema({
     createdAt: Date,
     updatedAt: Date
 })
-
-
+const rideBookingSchema = new mongoose.Schema({
+    customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer', required: true },
+    rideId: { type: mongoose.Schema.Types.ObjectId, ref: 'Ride', required: true },
+    bookingDate: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'completed', 'cancelled'],
+        default: 'pending'
+    },
+    fare: {
+        type: Number,
+        required: true
+    }
+});
+const RideBooking = model('RideBooking', rideBookingSchema);
 const propertyBooking = model('propertyBooking',propertyBookingsSchema)
-export {propertyBooking}
+export {propertyBooking, RideBooking}

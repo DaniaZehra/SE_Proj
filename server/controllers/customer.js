@@ -1,9 +1,10 @@
 import Customer from '../DBmodels/customerModel.js';
-import { propertyBooking } from '../DBmodels/bookingModel.js';
-import { Property } from '../DBmodels/ServicesOfferedModel.js';
+import Driver from '../DBmodels/driverModel.js';
+import { propertyBooking, RideBooking} from '../DBmodels/bookingModel.js';
+import { Property,Ride } from '../DBmodels/ServicesOfferedModel.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
+import axios from 'axios';
 //Registration
 const registerCustomer = async (req, res) => {
     const { firstname, lastname, email, password, phone } = req.body;
@@ -147,6 +148,127 @@ const search = async (req, res) => {
       res.status(400).json({ error: err.message });
     }
   };
-  
+//searching rides
+const searchRides = async (req, res) => {
+    const { pickupLocation, dropoffLocation } = req.body;
 
-export { registerCustomer, loginCustomer, booking, search };
+    try {
+        if (!pickupLocation || !dropoffLocation) {
+            return res.status(400).json({ message: 'Pickup and dropoff locations are required.' });
+        }
+        const rides = await Ride.find({
+            pickupLocation,
+            dropoffLocation,
+            status: 'available'
+        });
+
+        if (rides.length === 0) {
+            return res.status(404).json({ message: 'No available rides found going on this route.' });
+        }
+        res.status(200).json({ rides });
+    } catch (error) {
+        console.error('Error searching for rides:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+const bookRide = async (req, res) => {
+    const { customerId } = req.params;
+    const { rideId } = req.body;
+
+    try {
+        if (!rideId) {
+            return res.status(400).json({ message: 'Ride ID is required.' });
+        }
+
+        const ride = await Ride.findById(rideId);
+        if (!ride || ride.status !== 'available') {
+            return res.status(404).json({ message: 'Ride not available or does not exist.' });
+        }
+
+        ride.status = 'booked';
+        await ride.save();
+
+        const booking = new RideBooking({
+            customerId,
+            rideId,
+            status: 'pending',
+            fare: ride.fare
+        });
+
+        await booking.save();
+
+        res.status(201).json({
+            message: 'Ride booked successfully',
+            booking
+        });
+    } catch (error) {
+        console.error('Error booking ride:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+const cancelRide = async (req, res) => {
+  const { customerId, rideId } = req.params;
+
+  try {
+    const ride = await Ride.findById(rideId);
+    if (!ride) {
+      return res.status(404).json({ message: 'Ride not found' });
+    }
+    const booking = await RideBooking.findOne({ customerId, rideId });
+    if (!booking) {
+      return res.status(404).json({ message: 'Booking not found for this ride and customer' });
+    }
+    if (booking.status === 'completed') {
+      return res.status(400).json({ message: 'Cannot cancel a completed booking' });
+    }
+    ride.status = 'available';
+    await ride.save();
+
+    booking.status = 'cancelled';
+    await booking.save();
+
+    res.status(200).json({ message: 'Ride cancelled successfully' });
+  } catch (error) {
+    console.error('Error cancelling ride:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+//manual payment option (no gateway because not available here for free)
+const processPayment = async (req, res) => {
+  const { customerId, rideId } = req.params;
+
+  try {
+    const ride = await Ride.findById(rideId);
+    if (!ride) {
+      return res.status(404).json({ message: 'Ride not found' });
+    }
+
+    if (ride.status !== 'booked') {
+      return res.status(400).json({ message: 'Ride is not currently booked' });
+    }
+
+    const booking = await RideBooking.findOne({ customerId, rideId });
+    if (!booking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    ride.status = 'available';
+    ride.rideDate = new Date();
+    await ride.save();
+
+    booking.status = 'completed';
+    await booking.save();
+    const driver = await Driver.findById(ride.driverId);
+    if (driver) {
+      driver.totalEarnings += ride.fare;
+      await driver.save();
+    }
+
+    res.status(200).json({ message: 'Payment successful, ride completed.', fare: ride.fare });
+
+  } catch (error) {
+    console.error('Error processing payment:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+export { registerCustomer, loginCustomer, booking, search, searchRides,bookRide, cancelRide, processPayment };

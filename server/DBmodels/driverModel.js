@@ -21,6 +21,10 @@ const driverSchema = new Schema({
     },
     phone: {
         type: String
+    },
+    totalEarnings:{
+        type: Number,
+        default: 0
     }
 }, { timestamps: true });
 
