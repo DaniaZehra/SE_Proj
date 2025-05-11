@@ -236,7 +236,6 @@ const listActivity = async(req, res)=>{
 }
 
 //Edit Activity
-
 const editActivity = async (req, res) => {
   const activityId = req.params.id;
   const updates = req.body;
@@ -250,7 +249,16 @@ const editActivity = async (req, res) => {
     if (!activity) {
       return res.status(404).json({ error: "Activity not found" });
     }
-  };
+
+    Object.assign(activity, updates);
+    await activity.save();
+
+    return res.status(200).json(activity);
+  } catch (error) {
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+
 //searching rides
 const searchRides = async (req, res) => {
     const { pickupLocation, dropoffLocation } = req.body;
@@ -374,4 +382,4 @@ const processPayment = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-export { registerCustomer, loginCustomer, booking, search, searchRides,bookRide, cancelRide, processPayment };
+export { registerCustomer, loginCustomer, booking, search, searchRides,bookRide, cancelRide, processPayment, listActivity, editActivity };
