@@ -76,9 +76,6 @@ propertyBookingsSchema.post('findOneAndDelete', async function(doc) {
   }
 }); 
 
-const propertyBooking = model('propertyBooking',propertyBookingsSchema)
-
-
 const activityBookingSchema = new Schema({
   userId: { type: Types.ObjectId, ref: "User", required: true },
   activityId: { type: Types.ObjectId, ref: "Activity", required: true },
@@ -96,5 +93,25 @@ const activityBookingSchema = new Schema({
 });
 
 
+const rideBookingSchema = new mongoose.Schema({
+    customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer', required: true },
+    rideId: { type: mongoose.Schema.Types.ObjectId, ref: 'Ride', required: true },
+    bookingDate: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'completed', 'cancelled'],
+        default: 'pending'
+    },
+    fare: {
+        type: Number,
+        required: true
+    }
+});
+const RideBooking = model('RideBooking', rideBookingSchema);
+const propertyBooking = model('propertyBooking',propertyBookingsSchema)
 const activityBooking = model('activityBooking', activityBookingSchema)
-export {propertyBooking, activityBooking}
+export {propertyBooking, RideBooking}

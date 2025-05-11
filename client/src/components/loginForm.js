@@ -50,6 +50,9 @@ export default function LoginForm({ role }) {
       }
 
       setTimeout(() => {
+        if(role=="customer"){
+          router.push('/customer-dashboard')
+        }
         router.push(`/${role}`);
       }, 1500); // Redirect after showing message
       

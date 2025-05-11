@@ -1,11 +1,13 @@
 import Customer from '../DBmodels/customerModel.js';
+import Driver from '../DBmodels/driverModel.js';
+import { propertyBooking, RideBooking} from '../DBmodels/bookingModel.js';
+import { Property,Ride } from '../DBmodels/ServicesOfferedModel.js';
 import { propertyBooking } from '../DBmodels/bookingModel.js';
-import { Property } from '../DBmodels/ServicesOfferedModel.js';
 import { Activity } from '../DBmodels/ServicesOfferedModel.js';
 import {activityBooking} from '../DBmodels/bookingModel.js'
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
+import axios from 'axios';
 //Registration
 const registerCustomer = async (req, res) => {
     const { firstname, lastname, email, password, phone } = req.body;
