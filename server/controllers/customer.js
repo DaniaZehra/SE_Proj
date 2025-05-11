@@ -1,6 +1,8 @@
 import Customer from '../DBmodels/customerModel.js';
 import { propertyBooking } from '../DBmodels/bookingModel.js';
 import { Property } from '../DBmodels/ServicesOfferedModel.js';
+import { Activity } from '../DBmodels/ServicesOfferedModel.js';
+import {activityBooking} from '../DBmodels/bookingModel.js'
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -148,57 +150,205 @@ const booking = async (req, res) => {
 
 //Search function
 const search = async (req, res) => {
-    console.log(req.query.city)
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const sortField = req.query.sortBy || 'pricePerNight';
-    const sortOrder = req.query.order === 'desc' ? -1 : 1;
+  console.log(req.query.city)
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const sortField = req.query.sortBy || 'pricePerNight';
+  const sortOrder = req.query.order === 'desc' ? -1 : 1;
 
-    try {
-      const query = {};
-  
-      if (req.query.propertyType) {
-        const types = Array.isArray(req.query.propertyType)
-          ? req.query.propertyType
-          : [req.query.propertyType];
-        query.propertyType = { $in: types };
-      }
-      
-  
-      if (req.query.city) {
-        query["location.city"] = req.query.city;
-      }
-  
-      if (req.query.country) {
-        query["location.country"] = req.query.country;
-      }
-  
-      if (req.query.name) {
-        query.name = { $regex: req.query.name, $options: "i" }; 
-      }
-  
-      if (req.query.minPrice || req.query.maxPrice) {
-        query.pricePerNight = {};
-        if (req.query.minPrice) query.pricePerNight.$gte = Number(req.query.minPrice);
-        if (req.query.maxPrice) query.pricePerNight.$lte = Number(req.query.maxPrice);
-      }
-  
-      const result = await Property.find(query)
-      .sort({ [sortField]: sortOrder })
-      .skip((page - 1) * limit)
-      .limit(limit);
-      const total = await Property.countDocuments(query);
-      console.log(total)
-      res.status(200).json({
-        properties: result,
-        currentPage: page,
-        totalPages: Math.ceil(total / limit),
-        totalResults: total
-    });
-    } catch (err) {
-      res.status(400).json({ error: err.message });
+  try {
+    const query = {};
+
+    if (req.query.propertyType) {
+      const types = Array.isArray(req.query.propertyType)
+        ? req.query.propertyType
+        : [req.query.propertyType];
+      query.propertyType = { $in: types };
     }
-  };
-  
+    
 
-export { registerCustomer, loginCustomer, booking, search };
+    if (req.query.city) {
+      query["location.city"] = req.query.city;
+    }
+
+    if (req.query.country) {
+      query["location.country"] = req.query.country;
+    }
+
+    if (req.query.name) {
+      query.name = { $regex: req.query.name, $options: "i" }; 
+    }
+
+    if (req.query.minPrice || req.query.maxPrice) {
+      query.pricePerNight = {};
+      if (req.query.minPrice) query.pricePerNight.$gte = Number(req.query.minPrice);
+      if (req.query.maxPrice) query.pricePerNight.$lte = Number(req.query.maxPrice);
+    }
+
+    const result = await Property.find(query)
+    .sort({ [sortField]: sortOrder })
+    .skip((page - 1) * limit)
+    .limit(limit);
+    const total = await Property.countDocuments(query);
+    console.log(total)
+    res.status(200).json({
+      properties: result,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalResults: total
+  });
+  }catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+  
+//List Activity 
+
+const listActivity = async(req, res)=>{
+  const {title, description, location, schedule, price, specialNeeds, images, createdBy} = req.body
+  if(!title || !description || !location.address || !location.city || !location.country || !createdBy.userId || !createdBy.name || !createdBy.contactNo){
+    throw("Missing key fields please try again")
+  }
+  try{
+    const activity = await Activity.create({
+      title,
+      description,
+      createdBy,
+      images: images || '/placeholder.jpg',
+      schedule,
+      price, 
+      specialNeeds,
+      location
+    })
+
+    res.status(200).json({
+      title: activity.title,
+      description:activity.description,
+      createdBy: activity.createdBy,
+      schedule: activity.schedule,
+      price: activity.price,
+      location: activity.location
+    })
+  }catch(error){
+    res.status(400).json({ error: error.message });
+  }
+
+}
+
+//Edit Activity
+
+const editActivity = async (req, res) => {
+  const activityId = req.params.id;
+  const updates = req.body;
+
+  if (!activityId) {
+    return res.status(400).json({ error: "Activity ID is required" });
+  }
+
+  try {
+    const activity = await Activity.findById(activityId);
+    if (!activity) {
+      return res.status(404).json({ error: "Activity not found" });
+    }
+
+    if (updates.title && typeof updates.title !== "string") {
+      return res.status(400).json({ error: "Title must be a string" });
+    }
+    if (updates.price && typeof updates.price !== "number") {
+      return res.status(400).json({ error: "Price must be a number" });
+    }
+    if (updates.location) {
+      const { address, city, country } = updates.location;
+      if (!address || !city || !country) {
+        return res.status(400).json({ error: "Location must include address, city, and country" });
+      }
+    }
+
+    const updatedActivity = await Activity.findByIdAndUpdate(
+      activityId,
+      { $set: updates },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json({
+      message: "Activity updated successfully",
+      activity: updatedActivity
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+const bookActivity = async (req, res) => {
+  const { userId, activityId, slotsBooked, schedule } = req.body;
+  console.log(userId, activityId)
+
+  try {
+    const activity = await Activity.findById(activityId);
+    if (!activity) throw new Error('Activity not found');
+
+    if (!schedule?.date || !schedule?.time) {
+      return res.status(400).json({ 
+        error: "Schedule must include date and time",
+        example: {
+          date: "2025-07-09T00:00:00.000Z",
+          time: "09:00"
+        }
+      });
+    }
+
+    const scheduleDate = new Date(schedule.date);
+    const scheduleItem = activity.schedule.find(s => {
+      const activityDate = new Date(s.date);
+      return (
+        activityDate.getTime() === scheduleDate.getTime() &&
+        s.time === schedule.time
+      );
+    });
+
+    if (!scheduleItem) {
+      return res.status(404).json({
+        error: "Matching schedule not found",
+        availableSchedules: activity.schedule.map(s => ({
+          date: s.date,
+          time: s.time,
+          slotsAvailable: s.slotsAvailable
+        }))
+      });
+    }
+
+    // 4. Create booking
+    const booking = await activityBooking.create({
+      userId,
+      activityId,
+      slotsBooked,
+      totalPrice: activity.price * slotsBooked,
+      schedule: scheduleItem
+    });
+
+    res.status(201).json(booking);
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+      receivedPayload: req.body  // Echo back for debugging
+    });
+  }
+}
+
+//GET ALL activities
+const fetchActivities = async(req, res) => {
+  try{
+    const result = await Activity.find({isActive:'Active'})
+    const total = await Activity.countDocuments({isActive: 'Active'})
+    res.json({result: result, total:total})
+  }catch(error){
+    console.log(error)
+    throw(error)
+  }
+  
+}
+
+export { registerCustomer, loginCustomer, booking, search, listActivity, editActivity, bookActivity, fetchActivities };

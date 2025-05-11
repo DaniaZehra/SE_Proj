@@ -77,4 +77,24 @@ propertyBookingsSchema.post('findOneAndDelete', async function(doc) {
 }); 
 
 const propertyBooking = model('propertyBooking',propertyBookingsSchema)
-export {propertyBooking}
+
+
+const activityBookingSchema = new Schema({
+  userId: { type: Types.ObjectId, ref: "User", required: true },
+  activityId: { type: Types.ObjectId, ref: "Activity", required: true },
+  slotsBooked: { type: Number, required: true, min: 1 },
+  bookingStatus: {
+    type: String,
+    enum: ["confirmed", "cancelled", "pending"],
+    default: "confirmed"
+  },
+  totalPrice: {type: Number, required: true},
+  loyaltyPointsEarned: { type: Number, default: 0 },
+  schedule: { date: { type: Date, required: true },
+  time: { type: String, required: true }},
+  createdAt: { type: Date, default: Date.now }
+});
+
+
+const activityBooking = model('activityBooking', activityBookingSchema)
+export {propertyBooking, activityBooking}
