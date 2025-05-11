@@ -23,11 +23,11 @@ export default function LoginForm({ role }) {
         throw new Error("Please provide both email and password");
       }
       const response = await fetch(`http://localhost:4000/api/${role}/login`, {
+        credentials: "include",
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
-        },
-        credentials: "include", 
+        }, 
         body: JSON.stringify({ email, password }),
       });
 
@@ -50,7 +50,7 @@ export default function LoginForm({ role }) {
       }
 
       setTimeout(() => {
-        router.push(`/${role}`);
+        router.push(`/${role}/dashboard`);
       }, 1500); // Redirect after showing message
       
     } catch (err) {

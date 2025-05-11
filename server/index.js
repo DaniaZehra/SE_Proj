@@ -21,6 +21,7 @@ app.use(cors({
     credentials: true 
 }));
 app.use(cookieParser()); 
+
 app.use('/api/customer', customerRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/propertyOwner', ownerRoutes);
