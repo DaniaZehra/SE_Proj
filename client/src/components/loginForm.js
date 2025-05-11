@@ -50,7 +50,7 @@ export default function LoginForm({ role }) {
       }
 
       setTimeout(() => {
-        router.push(`/${role}/dashboard`);
+        router.push(`/${role}`);
       }, 1500); // Redirect after showing message
       
     } catch (err) {
