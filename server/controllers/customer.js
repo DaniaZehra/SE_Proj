@@ -157,8 +157,8 @@ const searchRides = async (req, res) => {
             return res.status(400).json({ message: 'Pickup and dropoff locations are required.' });
         }
         const rides = await Ride.find({
-            pickupLocation,
-            dropoffLocation,
+            pickupLocation: { $regex: pickupLocation, $options: 'i' },
+            dropoffLocation: { $regex: dropoffLocation, $options: 'i' },
             status: 'available'
         });
 

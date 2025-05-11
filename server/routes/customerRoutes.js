@@ -2,7 +2,7 @@
 import express from 'express';
 import { registerCustomer, loginCustomer, booking, search, searchRides, bookRide, cancelRide, processPayment } from '../controllers/customer.js';
 const router = express.Router();
-router.post('/:customerId/searchRides', searchRides);
+router.post('/searchRides', searchRides);
 router.post('/:customerId/bookRide', bookRide);
 router.post('/:customerId/cancelRide/:rideId', cancelRide);
 router.post('/:customerId/ride/:rideId/pay', processPayment);
