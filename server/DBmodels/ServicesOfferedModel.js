@@ -10,7 +10,10 @@ const propertySchema = new Schema(
       city: String,
       country: String,
     },
-    propertyType:{type:String, enum:['Hotel'|'Rest House'|'Apartment'|'Hostel'|'Room'|'Home']},
+    propertyType: {
+      type: String,
+      enum: ['Hotel', 'Rest House', 'Apartment', 'Hostel', 'Room', 'Home']
+    },
     pricePerNight: Number,
     amenities: [String],
     availability: [
@@ -29,7 +32,6 @@ const propertySchema = new Schema(
     updatedAt: Date
   }
 )
-const Property = mongoose.model('Property', propertySchema)
 
 const activitySchema = new Schema({
   title: { type: String, required: true },
@@ -85,8 +87,38 @@ const activitySchema = new Schema({
   }
 });
 
-const Activity = model('Activity',activitySchema)
 
-export {Property, Activity}
+const rideSchema = new Schema({
+    driverId: { type: mongoose.Schema.Types.ObjectId, ref: 'Driver', required: true },
+    pickupLocation: {
+        type: String,
+        required: true
+    },
+    dropoffLocation: {
+        type: String,
+        required: true
+    },
+    rideDate: {
+        type: Date,
+        required: true
+    },
+    status: {
+        type: String,
+        enum: ['available', 'booked'],
+        default: 'available'
+    },
+    fare: {
+        type: Number,
+        required: true
+    }
+});
+
+// Check if models already exist before creating them
+
+const Activity = mongoose.models.Activity || model('Activity',activitySchema)
+const Property = mongoose.models.Property || model('Property', propertySchema);
+const Ride = mongoose.models.Ride || model('Ride', rideSchema);
+
+export { Property, Ride, Activity }
 
 

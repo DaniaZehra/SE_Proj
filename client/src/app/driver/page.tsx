@@ -3,20 +3,14 @@
 import { Header } from "@/components/header";
 import { Car, CalendarDays, DollarSign } from "lucide-react"; // Import icons
 
-export default function DriverDashboard() {
-  const currentUser = {
-    name: "Henry Mark",
-    image: "/driver.png",
-  };
-
+export default function AdminDashboard() {
   return (
     <div>
       <Header
-        userName={currentUser.name}
-        userImage={currentUser.image}
+        userName="Driver"
+        userImage="/driver.png"
         role="driver"
       />
-
       <main className="flex-1 p-6">
         <h2 className="text-2xl font-bold mb-6">Driver Dashboard</h2>
 

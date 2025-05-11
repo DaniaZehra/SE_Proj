@@ -2,6 +2,7 @@ import Owner from '../DBmodels/propertyOwnerModel.js';
 import {Property} from '../DBmodels/ServicesOfferedModel.js'; 
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+
 const registerOwner = async (req, res) => {
     const { firstname, lastname, email, password, companyName, phone } = req.body;
     let emptyFields = [];
@@ -153,4 +154,61 @@ const deleteProperty = async (req, res) => {
   }
 };
 
-export { registerOwner, loginOwner, updateProperty, getPropertyById, getPropertiesByOwnerId, deleteProperty };
+const createProperty = async (req, res) => {
+  try {
+    const {
+      name,
+      description,
+      location,
+      propertyType,
+      pricePerNight,
+      amenities,
+      images,
+      filters
+    } = req.body;
+
+    // Get the ownerId from the authenticated user
+    const ownerId = req.userId;
+    console.log('Creating property with data:', {
+      ownerId,
+      name,
+      description,
+      location,
+      propertyType,
+      pricePerNight
+    });
+
+    const property = await Property.create({
+      ownerId,
+      name,
+      description,
+      location,
+      propertyType,
+      pricePerNight,
+      amenities: amenities || [],
+      images: images || [],
+      filters: filters || {
+        space: '',
+        specialNeeds: []
+      },
+      availability: [], // Initialize with empty availability
+      ratings: [], // Initialize with empty ratings
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+
+    res.status(201).json({
+      message: 'Property created successfully',
+      property
+    });
+  } catch (error) {
+    console.error('Error creating property:', error);
+    res.status(500).json({ 
+      message: 'Internal server error',
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
+  }
+};
+
+export { registerOwner, loginOwner, updateProperty, getPropertyById, getPropertiesByOwnerId, deleteProperty, createProperty };

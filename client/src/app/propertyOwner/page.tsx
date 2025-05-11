@@ -9,23 +9,17 @@ export default function PropertyOwnerDashboard() {
   const [ownerId, setOwnerId] = useState<string | null>(null);
 
   useEffect(() => {
-      console.log(ownerId);
     if (typeof window !== 'undefined') {
       const storedId = localStorage.getItem('ownerId');
       if (storedId) setOwnerId(storedId);
     }
   }, []);
 
-  const currentUser = {
-    name: "John Doe",
-    image: "/property-owner.png",
-  };
-
   return (
     <div>
       <Header
-        userName={currentUser.name}
-        userImage={currentUser.image}
+        userName="Property Owner"
+        userImage="/property-owner.png"
         role="propertyOwner"
       />
 
@@ -40,13 +34,13 @@ export default function PropertyOwnerDashboard() {
             <p className="text-muted-foreground">View and manage your listings</p>
           </Link>
 
-          <div className="rounded-lg border bg-card p-6 hover:shadow-md transition-shadow">
+          <Link href="/propertyOwner/add-property" className="rounded-lg border bg-card p-6 hover:shadow-md transition-shadow block">
             <div className="flex items-center gap-3 mb-2">
               <PlusSquare className="h-5 w-5 text-green-500" />
               <h3 className="font-semibold text-lg">Add New Property</h3>
             </div>
             <p className="text-muted-foreground">List a new hotel or rental</p>
-          </div>
+          </Link>
 
           <div className="rounded-lg border bg-card p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center gap-3 mb-2">
