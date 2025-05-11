@@ -16,10 +16,7 @@ app.get('/', (req, res) => {
   res.send('Hello from the backend!');
 });
 app.use(express.json());
-app.use(cors({
-    origin: "http://localhost:3000",
-    credentials: true 
-  }));
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use('/api/customer', customerRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/owner', ownerRoutes);

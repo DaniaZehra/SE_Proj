@@ -22,9 +22,6 @@ const customerSchema = new Schema({
     phone: {
         type: String
     },
-    activityOffered: [
-        {activityTitle: String, activityDescription: String, forDate: Date, maxSlots: { type: Number, min: 1 }, slotsTaken: { type: Number, default: 0, min: 0 }}
-    ],
     propertyBookings: [
     { bookingId: Types.ObjectId, propertyName: String, forDate: Date, status: String }
     ],
