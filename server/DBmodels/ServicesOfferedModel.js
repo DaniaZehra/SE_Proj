@@ -80,7 +80,7 @@ const activitySchema = new Schema({
 
   isActive: {
     type: String,
-    enum: ['pending request', 'request in review', 'request denied', 'request reviewed'],
+    enum: ['pending request', 'request in review', 'request denied', 'Active'],
     default: 'pending request'
   }
 });

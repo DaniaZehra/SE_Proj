@@ -280,48 +280,75 @@ const editActivity = async (req, res) => {
   }
 };
 
-const bookActivity = async (req, res) => {
-  const {userId, activityId, slotsBooked, totalPrice, schedule} = req.body
-  try{
 
-    const activity = await Activity.findById({_id:activityId})
-    if(!activity){
-      throw error('activity not found!')
+const bookActivity = async (req, res) => {
+  const { userId, activityId, slotsBooked, schedule } = req.body;
+  console.log(userId, activityId)
+
+  try {
+    const activity = await Activity.findById(activityId);
+    if (!activity) throw new Error('Activity not found');
+
+    if (!schedule?.date || !schedule?.time) {
+      return res.status(400).json({ 
+        error: "Schedule must include date and time",
+        example: {
+          date: "2025-07-09T00:00:00.000Z",
+          time: "09:00"
+        }
+      });
     }
-    console.log(activity)
-    if(!activity.schedule){
-      throw error('this activity has no schedules')
+
+    const scheduleDate = new Date(schedule.date);
+    const scheduleItem = activity.schedule.find(s => {
+      const activityDate = new Date(s.date);
+      return (
+        activityDate.getTime() === scheduleDate.getTime() &&
+        s.time === schedule.time
+      );
+    });
+
+    if (!scheduleItem) {
+      return res.status(404).json({
+        error: "Matching schedule not found",
+        availableSchedules: activity.schedule.map(s => ({
+          date: s.date,
+          time: s.time,
+          slotsAvailable: s.slotsAvailable
+        }))
+      });
     }
-    const scheduleItem = activity.schedule.find(s =>
-      s.date.toISOString().slice(0, 10) === new Date(schedule.date).toISOString().slice(0, 10) &&
-      s.time === schedule.time
-    );
-    console.log(scheduleItem)
-    if(!scheduleItem){
-      throw error('schedule not found')
-    }
-    if(schedule.slotsAvailable < slotsBooked){
-      throw new error('Not enough slots available')
-    }
+
+    // 4. Create booking
     const booking = await activityBooking.create({
-      userId, 
+      userId,
       activityId,
       slotsBooked,
-      totalPrice,
-      schedule: scheduleItem,
-    }
-    )
-    res.status(200).json({
-      userId: booking.userId,
-      activityId: booking.activityId,
-      bookingId: booking._id, 
-      slotsBooked: booking.slotsBooked, 
-      schedule: booking.schedule,
-      totalPrice: booking.totalPrice
-    })
+      totalPrice: activity.price * slotsBooked,
+      schedule: scheduleItem
+    });
 
-  }catch(error){
-    res.status(500).json({ error: error.message });
+    res.status(201).json(booking);
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+      receivedPayload: req.body  // Echo back for debugging
+    });
   }
 }
-export { registerCustomer, loginCustomer, booking, search, listActivity, editActivity, bookActivity };
+
+//GET ALL activities
+const fetchActivities = async(req, res) => {
+  try{
+    const result = await Activity.find({isActive:'Active'})
+    const total = await Activity.countDocuments({isActive: 'Active'})
+    res.json({result: result, total:total})
+  }catch(error){
+    console.log(error)
+    throw(error)
+  }
+  
+}
+
+export { registerCustomer, loginCustomer, booking, search, listActivity, editActivity, bookActivity, fetchActivities };
