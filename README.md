@@ -11,7 +11,6 @@ A comprehensive web application to help travelers plan hassle-free trips. Inspir
 - Smart search with filters 
 - Personalized recommendations based on history
 - Group travel and upcoming trip suggestions
-- User support and messaging system
 
 ## Tech Stack
 
