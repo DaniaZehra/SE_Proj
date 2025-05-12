@@ -1,6 +1,7 @@
 //this is just temporary, i have created these only to confirm operations on db
-import { registerCustomer, loginCustomer, booking, search, listActivity, editActivity, bookActivity, fetchActivities,  searchRides, bookRide, cancelRide, processPayment } from '../controllers/customer.js';
+import { registerCustomer, loginCustomer, booking, search, listActivity, editActivity, bookActivity, fetchActivities, bookRide, searchRides, cancelRide, processPayment } from '../controllers/customer.js';
 import {fetchById} from '../controllers/propertyFunctions.js'
+import express from 'express';
 
 const router = express.Router();
 router.post('/searchRides', searchRides);

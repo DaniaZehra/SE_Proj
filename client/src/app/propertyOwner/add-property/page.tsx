@@ -88,6 +88,7 @@ export default function AddProperty() {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
+        credentials : 'include',
         body: JSON.stringify(dataToSend)
       });
 
@@ -184,16 +185,16 @@ export default function AddProperty() {
                 onValueChange={(value) => handleSelectChange('propertyType', value)}
                 required
               >
-                <SelectTrigger>
+                <SelectTrigger className="bg-white">
                   <SelectValue placeholder="Select property type" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Hotel">Hotel</SelectItem>
-                  <SelectItem value="Rest House">Rest House</SelectItem>
-                  <SelectItem value="Apartment">Apartment</SelectItem>
-                  <SelectItem value="Hostel">Hostel</SelectItem>
-                  <SelectItem value="Room">Room</SelectItem>
-                  <SelectItem value="Home">Home</SelectItem>
+                <SelectContent className="bg-white">
+                  <SelectItem value="Hotel" className="hover:bg-blue-100 focus:bg-blue-100">Hotel</SelectItem>
+                  <SelectItem value="Rest House" className="hover:bg-blue-100 focus:bg-blue-100">Rest House</SelectItem>
+                  <SelectItem value="Apartment" className="hover:bg-blue-100 focus:bg-blue-100">Apartment</SelectItem>
+                  <SelectItem value="Hostel" className="hover:bg-blue-100 focus:bg-blue-100">Hostel</SelectItem>
+                  <SelectItem value="Room" className="hover:bg-blue-100 focus:bg-blue-100">Room</SelectItem>
+                  <SelectItem value="Home" className="hover:bg-blue-100 focus:bg-blue-100">Home</SelectItem>
                 </SelectContent>
               </Select>
             </div>

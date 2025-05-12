@@ -58,13 +58,17 @@ const AnalyticsChart = () => {
         <CardTitle>Travel Performance</CardTitle>
         <CardDescription>Monthly statistics</CardDescription>
         <Select onValueChange={setSelection} defaultValue="bookings">
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-48 bg-white">
             <SelectValue placeholder="Select metric" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white">
             <SelectGroup>
              {availableFilters.map((filter) => (
-                <SelectItem key={filter.value} value={filter.value}>
+                <SelectItem  
+                  key={filter.value} 
+                  value={filter.value}
+                  className="hover:bg-blue-100 focus:bg-blue-100 data-[state=checked]:bg-blue-100"
+                >
                   {filter.label}
                 </SelectItem>
               ))}

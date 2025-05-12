@@ -1,4 +1,5 @@
 import { User, Settings, LogOut, Star } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -21,25 +22,44 @@ interface HeaderProps {
 function getGreeting(role: HeaderProps['role'], userName: string) {
   switch (role) {
     case 'admin':
-      return `Welcome back, ${userName}. Lets get back to work.`
+      return `Welcome back. Lets get back to work.`
     case 'propertyOwner':
-      return `Welcome back, ${userName}. Manage your property listings here.`
+      return `Welcome back. Manage your property listings here.`
     case 'driver':
-      return `Welcome back, ${userName}. Ready for your next delivery?`
+      return `Welcome back. Ready for your next delivery?`
     case 'customer':
-      return `Welcome back, ${userName}! Ready for your next adventure?`
+      return `Welcome back! Ready for your next adventure?`
     default:
-      return `Welcome back, ${userName}!`
+      return `Welcome back!`
   }
 }
 
 export function Header({
-  userName = "Sarah",
-  userImage = "/placeholder.svg?height=40&width=40",
+  userName = "Customer",
+  userImage = "/user.png",
   loyaltyPoints = 3200,
   role = 'customer' //for default,
 
 }: HeaderProps) {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    // Clear all auth-related data from localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('ownerId');
+    localStorage.removeItem('driverId');
+    localStorage.removeItem('customerId');
+    
+    // Clear any cookies if they exist
+    document.cookie.split(";").forEach(function(c) { 
+      document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+    });
+
+    // Redirect to landing page
+    router.push('/');
+  };
+
   return (
     <header className="border-b bg-background">
       <div className="py-4 px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -63,7 +83,7 @@ export function Header({
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex items-center gap-2 h-10 px-2">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={userImage || "/placeholder.svg"} alt={userName} />
+                  <AvatarImage src={userImage || "/placeholder.svg"} alt={''} />
                   <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <span className="hidden sm:inline-block font-medium">{userName}</span>
@@ -95,7 +115,10 @@ export function Header({
                 <span>Preferences</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive">
+              <DropdownMenuItem 
+                className="text-destructive cursor-pointer"
+                onClick={handleLogout}
+              >
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Log out</span>
               </DropdownMenuItem>

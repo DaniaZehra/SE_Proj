@@ -39,6 +39,7 @@ export default function PendingProperties() {
 
       const response = await fetch('http://localhost:4000/api/admin/bookings/pending', {
         method: 'GET',
+        credentials: 'include',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -75,6 +76,7 @@ export default function PendingProperties() {
         `http://localhost:4000/api/admin/bookings/${bookingId}/status`,
         {
           method: 'PATCH',
+          credentials: 'include',
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'

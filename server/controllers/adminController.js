@@ -1,9 +1,9 @@
-import { Property, Activity } from '../DBmodels/servicesOfferedModel.js';
-import { propertyBooking } from '../DBmodels/bookingModel.js';
-import { activityBooking } from '../DBmodels/bookingModel.js';
+import { Property, Activity } from '../DBmodels/ServicesOfferedModel.js';
+import { PropertyBooking, ActivityBooking } from '../DBmodels/bookingModel.js';
 
 export const updatePropertyStatus = async (req, res) => {
     try {
+
         const { propertyId } = req.params;
         const { status } = req.body;
 
@@ -36,7 +36,7 @@ export const updatePropertyStatus = async (req, res) => {
 
 export const getPendingProperties = async (req, res) => {
     try {
-        const pendingProperties = await propertyBooking.find({ status: 'pending' })
+        const pendingProperties = await PropertyBooking.find({ status: 'pending' })
             .sort({ createdAt: -1 });
         
         res.status(200).json(pendingProperties);
@@ -49,7 +49,7 @@ export const getPendingProperties = async (req, res) => {
 // Get all pending bookings with property details
 export const getPendingBookings = async (req, res) => {
     try {
-        const pendingBookings = await propertyBooking.find({ status: 'pending' })
+        const pendingBookings = await PropertyBooking.find({ status: 'pending' })
             .sort({ createdAt: -1 });
 
         // Fetch property details for each booking
@@ -84,7 +84,7 @@ export const updateBookingStatus = async (req, res) => {
             return res.status(400).json({ message: 'Invalid status' });
         }
 
-        const booking = await propertyBooking.findByIdAndUpdate(
+        const booking = await PropertyBooking.findByIdAndUpdate(
             bookingId,
             { 
                 status,
@@ -110,7 +110,7 @@ export const updateBookingStatus = async (req, res) => {
 // Get all pending activity bookings with activity details
 export const getPendingActivityBookings = async (req, res) => {
     try {
-        const pendingBookings = await activityBooking.find({ bookingStatus: 'pending' })
+        const pendingBookings = await ActivityBooking.find({ bookingStatus: 'pending' })
             .sort({ createdAt: -1 });
 
         // Fetch activity details for each booking
@@ -146,7 +146,7 @@ export const updateActivityBookingStatus = async (req, res) => {
             return res.status(400).json({ message: 'Invalid status' });
         }
 
-        const booking = await activityBooking.findByIdAndUpdate(
+        const booking = await ActivityBookingctivityBooking.findByIdAndUpdate(
             bookingId,
             { 
                 bookingStatus: status,

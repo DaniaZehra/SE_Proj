@@ -1,10 +1,8 @@
 import Customer from '../DBmodels/customerModel.js';
 import Driver from '../DBmodels/driverModel.js';
-import { propertyBooking, RideBooking} from '../DBmodels/bookingModel.js';
-import { Property,Ride } from '../DBmodels/ServicesOfferedModel.js';
-import { propertyBooking } from '../DBmodels/bookingModel.js';
+import { PropertyBooking, RideBooking, ActivityBooking } from '../DBmodels/bookingModel.js';
+import { Property,Ride } from '../DBmodels/ServicesOfferedModel.js'
 import { Activity } from '../DBmodels/ServicesOfferedModel.js';
-import {activityBooking} from '../DBmodels/bookingModel.js'
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
@@ -119,7 +117,7 @@ const booking = async (req, res) => {
     if (!price || price <= 0) {
       return res.status(400).json({ error: "Invalid price" });
     }
-    const booking = await propertyBooking.create({
+    const booking = await PropertyBooking.create({
       userId,
       propertyId,
       propertyType,
@@ -322,7 +320,7 @@ const bookActivity = async (req, res) => {
     }
 
     // 4. Create booking
-    const booking = await activityBooking.create({
+    const booking = await ActivityBooking.create({
       userId,
       activityId,
       slotsBooked,
@@ -353,4 +351,132 @@ const fetchActivities = async(req, res) => {
   
 }
 
-export { registerCustomer, loginCustomer, booking, search, listActivity, editActivity, bookActivity, fetchActivities };
+const searchRides = async (req, res) => {
+  try {
+    const { pickupLocation, dropoffLocation } = req.body;
+    
+    if (!pickupLocation || !dropoffLocation) {
+      return res.status(400).json({ error: 'Pickup and dropoff locations are required' });
+    }
+
+    const rides = await Ride.find({
+      pickupLocation: { $regex: pickupLocation, $options: 'i' },
+      dropoffLocation: { $regex: dropoffLocation, $options: 'i' },
+      status: 'available'
+    });
+
+    res.status(200).json(rides);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const bookRide = async (req, res) => {
+  try {
+    const { customerId } = req.params;
+    const { rideId } = req.body;
+
+    if (!rideId) {
+      return res.status(400).json({ error: 'Ride ID is required' });
+    }
+
+    const ride = await Ride.findById(rideId);
+    if (!ride) {
+      return res.status(404).json({ error: 'Ride not found' });
+    }
+
+    if (ride.status !== 'available') {
+      return res.status(400).json({ error: 'Ride is not available' });
+    }
+
+    const booking = await RideBooking.create({
+      customerId,
+      rideId,
+      bookingDate: new Date(),
+      status: 'pending',
+      fare: ride.fare
+    });
+
+    // Update ride status
+    ride.status = 'booked';
+    await ride.save();
+
+    res.status(201).json(booking);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const cancelRide = async (req, res) => {
+  try {
+    const { customerId, rideId } = req.params;
+
+    const booking = await RideBooking.findOne({
+      customerId,
+      rideId,
+      status: { $in: ['pending', 'confirmed'] }
+    });
+
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found or cannot be cancelled' });
+    }
+
+    booking.status = 'cancelled';
+    await booking.save();
+
+    // Update ride status back to available
+    const ride = await Ride.findById(rideId);
+    if (ride) {
+      ride.status = 'available';
+      await ride.save();
+    }
+
+    res.status(200).json({ message: 'Ride cancelled successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const processPayment = async (req, res) => {
+  try {
+    const { customerId, rideId } = req.params;
+    const { paymentMethod } = req.body;
+
+    const booking = await RideBooking.findOne({
+      customerId,
+      rideId,
+      status: 'pending'
+    });
+
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found or already processed' });
+    }
+
+    // Here you would typically integrate with a payment gateway
+    // For now, we'll just simulate a successful payment
+    booking.status = 'confirmed';
+    await booking.save();
+
+    res.status(200).json({ 
+      message: 'Payment processed successfully',
+      booking 
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export { 
+  registerCustomer, 
+  loginCustomer, 
+  booking, 
+  search, 
+  listActivity, 
+  editActivity, 
+  bookActivity, 
+  fetchActivities,
+  searchRides,
+  bookRide,
+  cancelRide,
+  processPayment
+};

@@ -1,4 +1,4 @@
-import { Property } from '../DBmodels/servicesOfferedModel.js';
+import { Property } from '../DBmodels/ServicesOfferedModel.js';
 
 // Create a new property
 export const createProperty = async (req, res) => {

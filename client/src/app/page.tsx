@@ -6,17 +6,15 @@ import { Suspense } from "react";
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col relative">
-      <div>
       <div className="z-[10]">
         <HeaderCarousel/>
       </div>
-      <div className="absolute w-full flex justify-center top-36 z-[20]">
-        <div className="bg-slate-100 rounded-lg"> 
-        <Suspense fallback={<div>Loading search...</div>}>
-          <TabBar />
-        </Suspense>
+      <div className="w-full flex justify-center my-8 z-[20]">
+        <div className="bg-slate-100 rounded-lg shadow-lg p-6">
+          <Suspense fallback={<div>Loading search...</div>}>
+            <TabBar />
+          </Suspense>
         </div>
-      </div>
       </div>
       <section className="p-9 bg-slate-100">
       <span className="text-xl font-bold ml-2">The best deals are waiting for you</span>

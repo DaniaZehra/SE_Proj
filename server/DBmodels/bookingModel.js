@@ -118,4 +118,4 @@ const PropertyBooking = mongoose.models.propertyBooking || model('propertyBookin
 const ActivityBooking = mongoose.models.activityBooking || model('activityBooking', activityBookingSchema);
 const RideBooking = mongoose.models.RideBooking || model('RideBooking', rideBookingSchema);
 
-export { PropertyBooking, ActivityBooking, RideBooking };
+export { PropertyBooking, ActivityBooking , RideBooking };

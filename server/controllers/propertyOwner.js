@@ -1,5 +1,5 @@
 import Owner from '../DBmodels/propertyOwnerModel.js';
-import {Property} from '../DBmodels/servicesOfferedModel.js'; 
+import {Property} from '../DBmodels/ServicesOfferedModel.js'; 
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -220,4 +220,17 @@ const createProperty = async (req, res) => {
     }
 };
 
-export { registerOwner, loginOwner, updateProperty, getPropertyById, getPropertiesByOwnerId, deleteProperty, createProperty };
+const getProfile = async (req, res) => {
+    try {
+        const owner = await Owner.findById(req.userId).select('-password');
+        if (!owner) {
+            return res.status(404).json({ error: 'Owner not found' });
+        }
+        res.status(200).json(owner);
+    } catch (error) {
+        console.error('Error fetching owner profile:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+export { registerOwner, loginOwner, updateProperty, getPropertyById, getPropertiesByOwnerId, deleteProperty, createProperty, getProfile };
