@@ -5,6 +5,8 @@ import {
   LayoutDashboard,
   type LucideIcon,
   Settings,
+  Search,
+  PlusSquare,
 } from "lucide-react"
 
 import {
@@ -58,10 +60,12 @@ const defaultNavigationItems: NavigationItem[] = [
   },
   {
     title: "Browse Activities",
+    icon: Search,
     url: "/all-activities",
   },
   {
     title: "List my Activity",
+    icon: PlusSquare,
     url: "/list-activity"
   },
   {

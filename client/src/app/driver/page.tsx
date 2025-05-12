@@ -1,7 +1,7 @@
 'use client';
 
 import { Header } from "@/components/header";
-import { Car, CalendarDays, DollarSign } from "lucide-react"; // Import icons
+import { Car, CalendarDays, DollarSign } from "lucide-react"; 
 
 export default function AdminDashboard() {
   return (

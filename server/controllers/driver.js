@@ -87,6 +87,10 @@ const loginDriver = async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000 
         });
 
+        if (role === "driver" && driver && driver._id) {
+            localStorage.setItem("driverId", driver._id);
+        }
+
         res.status(200).json({ message: 'Login successful.', driver });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -144,4 +148,41 @@ const addRide = async (req, res) => {
         res.status(500).json({ message: `Error adding ride: ${error.message}` });
     }
 };
-export { registerDriver, loginDriver,addRide };
+
+// Get all rides for a driver
+const getRides = async (req, res) => {
+    const driverId = req.params.driverId;
+    try {
+        const rides = await Ride.find({ driverId });
+        res.status(200).json(rides);
+    } catch (error) {
+        res.status(500).json({ message: `Error fetching rides: ${error.message}` });
+    }
+};
+
+// Update a ride
+const updateRide = async (req, res) => {
+    const { rideId } = req.params;
+    const updateData = req.body;
+    try {
+        const ride = await Ride.findByIdAndUpdate(rideId, updateData, { new: true });
+        if (!ride) return res.status(404).json({ message: 'Ride not found' });
+        res.status(200).json(ride);
+    } catch (error) {
+        res.status(500).json({ message: `Error updating ride: ${error.message}` });
+    }
+};
+
+// Delete a ride
+const deleteRide = async (req, res) => {
+    const { rideId } = req.params;
+    try {
+        const ride = await Ride.findByIdAndDelete(rideId);
+        if (!ride) return res.status(404).json({ message: 'Ride not found' });
+        res.status(200).json({ message: 'Ride deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: `Error deleting ride: ${error.message}` });
+    }
+};
+
+export { registerDriver, loginDriver, addRide, getRides, updateRide, deleteRide };

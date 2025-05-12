@@ -163,22 +163,23 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
         </div>
       )}
 
-      <div className="relative w-full h-48">
+      <div className="relative w-full h-56 rounded-t-lg overflow-hidden">
         <Image
-          src={activity.images[0] || "/placeholder.svg?height=200&width=300"}
+          src={activity.images[0] || "/pexels-tobiasbjorkli-2104152.jpg"}
           alt={activity.title}
           fill
-          className="object-cover rounded-t-lg"
+          className="object-cover rounded-t-lg transition-transform duration-300 hover:scale-105"
+          priority
         />
         <div className="absolute top-2 right-2">
-          <Badge variant="secondary" className="bg-white/90 text-black font-medium">
+          <Badge variant="secondary" className="bg-white/90 text-black font-medium shadow-md">
             ${activity.price}
           </Badge>
         </div>
       </div>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-xl">{activity.title}</CardTitle>
+          <CardTitle className="text-xl font-bold leading-tight line-clamp-2">{activity.title}</CardTitle>
           <div className="flex items-center gap-1">
             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
             <span className="text-sm font-medium">{activity.ratings?.average}</span>
@@ -192,10 +193,9 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
           </span>
         </CardDescription>
       </CardHeader>
-      <CardContent className="pb-2 flex-grow">
-        <p className="text-sm line-clamp-2 mb-3">{activity.description}</p>
-
-        <div className="flex flex-col gap-2 text-sm">
+      <CardContent className="flex-1 flex flex-col justify-between">
+        <p className="text-sm line-clamp-3 mb-3 text-gray-700">{activity.description}</p>
+        <div className="flex flex-col gap-2 text-sm mb-4">
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-muted-foreground" />
             <span>{formattedDate}</span>
@@ -215,7 +215,6 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
             </div>
           )}
         </div>
-
         {showDetails && (
           <div className="mt-4 space-y-3 text-sm">
             <div>
@@ -228,14 +227,12 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
                 ))}
               </div>
             </div>
-
             <div>
               <h4 className="font-medium mb-1">Contact:</h4>
               <p>
                 {activity.createdBy.name} - {activity.createdBy.contactNo}
               </p>
             </div>
-
             {activity.reviews?.length > 0 && (
               <div>
                 <h4 className="font-medium mb-1">Latest Review:</h4>
@@ -245,7 +242,7 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
           </div>
         )}
       </CardContent>
-      <CardFooter className="pt-0 flex justify-between">
+      <CardFooter className="flex gap-2 mt-auto">
         <Button variant="outline" size="sm" onClick={() => setShowDetails(!showDetails)}>
           {showDetails ? (
             <>
@@ -257,7 +254,7 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
             </>
           )}
         </Button>
-        <Button size="sm" onClick={() => setBookingDialog(true)}>Book Now</Button>
+        <Button size="sm" onClick={() => setBookingDialog(true)} className="bg-blue-600 text-white hover:bg-blue-700 transition">Book Now</Button>
       </CardFooter>
 
       {/* Booking Dialog */}

@@ -3,6 +3,9 @@ import Admin from '../DBmodels/adminModel.js';
 import bcrypt from 'bcrypt' 
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import Customer from '../DBmodels/customerModel.js';
+import Driver from '../DBmodels/driverModel.js';
+import Owner from '../DBmodels/propertyOwnerModel.js';
 dotenv.config();
 //register
 const registerAdmin = async (req, res) => {
@@ -92,8 +95,22 @@ const loginAdmin = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
     try {
-        const users = await Admin.getAllUsers();
-        res.status(200).json(users);
+        const [admins, customers, drivers, owners] = await Promise.all([
+            Admin.find({}).select('-password'),
+            Customer.find({}).select('-password'),
+            Driver.find({}).select('-password'),
+            Owner.find({}).select('-password')
+        ]);
+
+        // Add role to each user
+        const allUsers = [
+            ...admins.map(admin => ({ ...admin.toObject(), role: 'admin' })),
+            ...customers.map(customer => ({ ...customer.toObject(), role: 'customer' })),
+            ...drivers.map(driver => ({ ...driver.toObject(), role: 'driver' })),
+            ...owners.map(owner => ({ ...owner.toObject(), role: 'propertyOwner' }))
+        ];
+
+        res.status(200).json(allUsers);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -119,17 +136,38 @@ const getUser = async(req,res) => {
 
 const updateUser = async (req, res) => {
     const { id } = req.params;
+    const { role, ...updateData } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({ error: 'Invalid user ID' });
     }
 
     try {
-        const user = await Admin.updateUser(id, req.body);
-        if (!user) {
+        let updatedUser;
+        switch (role) {
+            case 'admin':
+                updatedUser = await Admin.findByIdAndUpdate(id, updateData, { new: true }).select('-password');
+                break;
+            case 'customer':
+                updatedUser = await Customer.findByIdAndUpdate(id, updateData, { new: true }).select('-password');
+                break;
+            case 'driver':
+                updatedUser = await Driver.findByIdAndUpdate(id, updateData, { new: true }).select('-password');
+                break;
+            case 'propertyOwner':
+                updatedUser = await Owner.findByIdAndUpdate(id, updateData, { new: true }).select('-password');
+                break;
+            default:
+                return res.status(400).json({ error: 'Invalid user role' });
+        }
+
+        if (!updatedUser) {
             return res.status(404).json({ error: 'User not found' });
         }
-        res.status(200).json(user);
+
+        // Add role back to the response
+        updatedUser = { ...updatedUser.toObject(), role };
+        res.status(200).json(updatedUser);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -137,16 +175,35 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     const { id } = req.params;
+    const { role } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({ error: 'Invalid user ID' });
     }
 
     try {
-        const user = await Admin.deleteUser(id);
-        if (!user) {
+        let deletedUser;
+        switch (role) {
+            case 'admin':
+                deletedUser = await Admin.findByIdAndDelete(id);
+                break;
+            case 'customer':
+                deletedUser = await Customer.findByIdAndDelete(id);
+                break;
+            case 'driver':
+                deletedUser = await Driver.findByIdAndDelete(id);
+                break;
+            case 'propertyOwner':
+                deletedUser = await Owner.findByIdAndDelete(id);
+                break;
+            default:
+                return res.status(400).json({ error: 'Invalid user role' });
+        }
+
+        if (!deletedUser) {
             return res.status(404).json({ error: 'User not found' });
         }
+
         res.status(200).json({ message: 'User deleted successfully' });
     } catch (error) {
         res.status(500).json({ error: error.message });

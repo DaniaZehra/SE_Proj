@@ -7,7 +7,7 @@ import React from 'react';
 export default function OwnerPropertiesPage() {
   const router = useRouter();
   const params = useParams();
-  const ownerId = params.id as string; // get the [id] param from the URL
+  const ownerId = params.id as string;
 
   const [properties, setProperties] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
