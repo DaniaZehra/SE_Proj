@@ -3,6 +3,7 @@ import Admin from '../DBmodels/adminModel.js';
 import bcrypt from 'bcrypt' 
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { Flight } from '../DBmodels/flightModels.js';
 dotenv.config();
 //register
 const registerAdmin = async (req, res) => {
@@ -152,5 +153,60 @@ const deleteUser = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+// CREATE FLIGHT
+const createFlight = async (req, res) => {
+    const { airline, from, to, date, time, price, seatsAvailable } = req.body;  
 
-export {registerAdmin, loginAdmin, getAllUsers, getUser, updateUser, deleteUser};
+    if (!airline || !from || !to || !date || !time || !price || !seatsAvailable) {
+        return res.status(400).json({ error: "All fields are required." });
+    }
+
+    try {
+        const flight = new Flight({
+            airline,
+            from,
+            to,
+            date,
+            time, 
+            price,
+            seatsAvailable, 
+            status: "scheduled" 
+        });
+        await flight.save();
+
+        res.status(201).json({ message: 'Flight created successfully', flight });
+    } catch (error) {
+        res.status(500).json({ error: "Failed to create flight", details: error.message });
+    }
+};
+// GET ALL FLIGHTS
+const getAllFlights = async (req, res) => {
+    try {
+        const flights = await Flight.find({});
+        res.status(200).json(flights);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch flights", details: error.message });
+    }
+};
+
+// DELETE FLIGHT
+const deleteFlight = async (req, res) => {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: 'Invalid flight ID' });
+    }
+
+    try {
+        const deleted = await Flight.findByIdAndDelete(id);
+        if (!deleted) {
+            return res.status(404).json({ error: 'Flight not found' });
+        }
+        res.status(200).json({ message: 'Flight deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: "Failed to delete flight", details: error.message });
+    }
+};
+
+
+export {registerAdmin, loginAdmin, getAllUsers, getUser, updateUser, deleteUser,createFlight,getAllFlights, deleteFlight};

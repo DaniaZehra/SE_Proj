@@ -4,7 +4,7 @@ import CardComponent from "./DynamicExplore";
 import  Form  from 'next/form'; 
 import {useRouter} from 'next/navigation'
 import SearchForm from "@/components/searchRidesForm";
-
+import SearchFlightsForm from "@/components/searchFlightsForm";
 
 export default function TabBar() {
   
@@ -120,9 +120,10 @@ export default function TabBar() {
           <CardComponent 
             title="Search for Flights"
             description="Book your next flight"
-            footer={<button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Book</button>}
           >
-            <div className="p-4">Flight search form would go here</div>
+             <div className="p-4">
+              <SearchFlightsForm />
+            </div>
           </CardComponent>
         </TabsContent>
       </Tabs>

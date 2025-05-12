@@ -7,6 +7,7 @@ import customerRoutes from './routes/customerRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
 import driverRoutes from './routes/driverRoutes.js'
 import ownerRoutes from './routes/ownerRoutes.js' 
+import flightRoutes from './routes/flightRoutes.js';
 const app = express();
 
 dotenv.config();
@@ -21,7 +22,7 @@ app.use(cors({
     credentials: true 
 }));
 app.use(cookieParser()); 
-
+app.use('/api/flights', flightRoutes);
 app.use('/api/customer', customerRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/propertyOwner', ownerRoutes);

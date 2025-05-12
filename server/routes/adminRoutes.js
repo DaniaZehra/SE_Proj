@@ -5,7 +5,10 @@ import {
     registerAdmin,
     getUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    createFlight,
+    getAllFlights,
+    deleteFlight
 } from '../controllers/admin.js';
 import cookieParser from 'cookie-parser';
 import {getAllUsers} from '../controllers/admin.js';
@@ -20,4 +23,8 @@ router.get('/users', requireAuth, getAllUsers);
 router.get('/users/:id', requireAuth, getUser);
 router.patch('/users/:id', requireAuth, updateUser);
 router.delete('/users/:id', requireAuth, deleteUser);
+
+router.post('/flight', createFlight);
+router.get('/flights', getAllFlights);
+router.delete('/flight/:id', deleteFlight);
 export default router;
