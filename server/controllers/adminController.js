@@ -3,7 +3,6 @@ import { PropertyBooking, ActivityBooking } from '../DBmodels/bookingModel.js';
 
 export const updatePropertyStatus = async (req, res) => {
     try {
-
         const { propertyId } = req.params;
         const { status } = req.body;
 
