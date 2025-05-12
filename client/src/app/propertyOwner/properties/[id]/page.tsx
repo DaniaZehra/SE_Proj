@@ -18,7 +18,10 @@ export default function OwnerPropertiesPage() {
     if (!ownerId) return;
     const fetchProperties = async () => {
       try {
-        const res = await fetch(`http://localhost:4000/api/propertyOwner/properties/${ownerId}`);
+        const res = await fetch(`http://localhost:4000/api/propertyOwner/properties/${ownerId}`, {
+          credentials: 'include',
+        });
+
         if (!res.ok) throw new Error('Failed to fetch properties');
         const data = await res.json();
         setProperties(data);
